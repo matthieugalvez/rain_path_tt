@@ -1,5 +1,13 @@
-import FlowEditor from '../features/flow/components/FlowEditor'
+import {
+  ReactFlowProvider,
+} from '@xyflow/react'
+
+import WorkflowEditor from '../features/flow/components/flowEditor'
 
 export default function EditorPage() {
-  return <FlowEditor />
+  return (
+    <ReactFlowProvider>
+      <WorkflowEditor />
+    </ReactFlowProvider>
+  )
 }

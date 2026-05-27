@@ -45,6 +45,14 @@ interface WorkflowState {
 	  nodeId: string,
 	  data: any
   ) => void
+
+  createNode: (
+	type: string,
+	position: {
+    	x: number
+    	y: number
+  	}
+  ) => void
 }
 
 export const useWorkflowStore =
@@ -151,6 +159,34 @@ export const useWorkflowStore =
 				}
 			}),
 		})),
+
+		createNode: (
+  			type,
+  			position
+		) =>
+  			set((state) => {
+    		const id =
+      			crypto.randomUUID()
+
+    		return {
+			  nodes: [
+				...state.nodes,
+
+				{
+				  id,
+
+				  type,
+
+				  position,
+
+				  data:
+					getDefaultNodeData(
+					  type
+					),
+				},
+			  ],
+			}
+		  }),
   }))
 
 function getDefaultNodeData(type: string) {
