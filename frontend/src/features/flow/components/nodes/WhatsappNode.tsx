@@ -6,6 +6,7 @@ import {
 import BaseNode from './BaseNode'
 
 export default function WhatsappNode({
+	data,
   selected,
 }: any) {
   return (
@@ -28,6 +29,7 @@ export default function WhatsappNode({
         title="🟢 WhatsApp"
         background="#dcfce7"
         selected={selected}
+		invalid={data.invalid}
       >
         Envoi WhatsApp
       </BaseNode>

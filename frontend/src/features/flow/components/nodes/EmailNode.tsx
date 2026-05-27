@@ -29,6 +29,7 @@ export default function EmailNode({
         title="📧 Email"
         background="#dbeafe"
         selected={selected}
+		invalid={data.invalid}
       >
         {data.subject || 'Envoi email'}
       </BaseNode>

@@ -16,6 +16,11 @@ import NodePalette from './NodePalette'
 
 import { useWorkflowStore } from '../store/flowStore'
 
+import {
+  validateWorkflow,
+  getInvalidNodeIds,
+} from '../utils/flowValidation'
+
 export default function WorkflowEditor() {
   const nodes =
     useWorkflowStore(
@@ -52,6 +57,29 @@ export default function WorkflowEditor() {
       (state) =>
         state.setSelectedNodeId
     )
+
+	const errors = validateWorkflow(
+	  nodes,
+	  edges
+	)
+
+	const invalidNodeIds =
+	  getInvalidNodeIds(errors)
+
+	const styledNodes = nodes.map(
+	  (node) => ({
+		...node,
+
+		data: {
+		  ...node.data,
+
+		  invalid:
+			invalidNodeIds.has(
+			  node.id
+			),
+		},
+	  })
+	)
 
   const { screenToFlowPosition } =
     useReactFlow()
@@ -105,34 +133,8 @@ export default function WorkflowEditor() {
 
       <WorkflowErrors />
 
-      {nodes.length <= 1 && (
-        <div
-          style={{
-            position: 'absolute',
-
-            top: '50%',
-            left: '50%',
-
-            transform:
-              'translate(-50%, -50%)',
-
-            opacity: 0.4,
-
-            fontSize: 24,
-
-            fontWeight: 600,
-
-            pointerEvents: 'none',
-
-            zIndex: 1,
-          }}
-        >
-          Drag nodes here
-        </div>
-      )}
-
       <ReactFlow
-        nodes={nodes}
+        nodes={styledNodes}
         edges={edges}
         nodeTypes={nodeTypes}
         onNodesChange={

@@ -29,6 +29,7 @@ export default function DelayNode({
         title="⏱ Attente"
         background="#fef3c7"
         selected={selected}
+		invalid={data.invalid}
       >
         Attendre {data.days} jours
       </BaseNode>

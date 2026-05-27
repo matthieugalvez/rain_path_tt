@@ -57,22 +57,43 @@ interface WorkflowState {
 
 export const useWorkflowStore =
   create<WorkflowState>((set) => ({
-    nodes: [
-      {
-        id: 'start',
+	nodes: [
+	  {
+		id: 'start',
 
-        type: 'start',
+		type: 'start',
 
-        position: {
-          x: 400,
-          y: 50,
-        },
+		position: {
+		  x: 100,
+		  y: 200,
+		},
 
-        data: {},
-      },
-    ],
+		data: {},
+	  },
 
-    edges: [],
+	  {
+		id: 'end',
+
+		type: 'end',
+
+		position: {
+		  x: 500,
+		  y: 200,
+		},
+
+		data: {},
+	  },
+	],
+
+	edges: [
+	  {
+		id: 'start-end',
+
+		source: 'start',
+
+		target: 'end',
+	  },
+	],
 
     setNodes: (nodes) =>
       set({

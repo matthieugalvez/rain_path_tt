@@ -6,6 +6,7 @@ import {
 import BaseNode from './BaseNode'
 
 export default function SmsNode({
+	data,
   selected,
 }: any) {
   return (
@@ -28,6 +29,7 @@ export default function SmsNode({
         title="📱 SMS"
         background="#e0f2fe"
         selected={selected}
+		invalid={data.invalid}
       >
         Envoi SMS
       </BaseNode>

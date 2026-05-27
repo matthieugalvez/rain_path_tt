@@ -6,6 +6,7 @@ import {
 import BaseNode from './BaseNode'
 
 export default function StartNode({
+	data,
   selected,
 }: any) {
   return (
@@ -18,6 +19,7 @@ export default function StartNode({
         title="🚀 Départ"
         background="#dcfce7"
         selected={selected}
+		invalid={data.invalid}
       >
         Examen effectué
       </BaseNode>

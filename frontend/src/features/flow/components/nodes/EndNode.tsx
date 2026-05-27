@@ -6,6 +6,7 @@ import {
 import BaseNode from './BaseNode'
 
 export default function EndNode({
+	data,
   selected,
 }: any) {
   return (
@@ -28,6 +29,7 @@ export default function EndNode({
         title="🏁 Fin"
         background="#fee2e2"
         selected={selected}
+		invalid={data.invalid}
       >
         Fin du workflow
       </BaseNode>

@@ -5,6 +5,7 @@ interface Props {
   children?: ReactNode
   background?: string
   selected?: boolean
+  invalid?: boolean
 }
 
 export default function BaseNode({
@@ -12,6 +13,7 @@ export default function BaseNode({
   children,
   background = '#ffffff',
   selected = false,
+  invalid = false,
 }: Props) {
   return (
     <div
@@ -22,9 +24,11 @@ export default function BaseNode({
 
         borderRadius: 14,
 
-        border: selected
-          ? '2px solid #2563eb'
-          : '1px solid #d1d5db',
+		border: invalid
+		  ? '2px solid #dc2626'
+		  : selected
+			? '2px solid #2563eb'
+			: '1px solid #d1d5db',
 
         background,
 
@@ -35,9 +39,11 @@ export default function BaseNode({
           ? 'scale(1.02)'
           : 'scale(1)',
 
-        boxShadow: selected
-          ? '0 0 0 4px rgba(37,99,235,0.15)'
-          : '0 2px 6px rgba(0,0,0,0.08)',
+		boxShadow: invalid
+		  ? '0 0 0 4px rgba(220,38,38,0.15)'
+		  : selected
+			? '0 0 0 4px rgba(37,99,235,0.15)'
+			: '0 2px 6px rgba(0,0,0,0.08)',
 
         fontFamily: 'sans-serif',
       }}

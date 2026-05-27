@@ -6,6 +6,7 @@ import {
 import BaseNode from './BaseNode'
 
 export default function PostalNode({
+	data,
   selected,
 }: any) {
   return (
@@ -28,6 +29,7 @@ export default function PostalNode({
         title="📮 Courrier"
         background="#fef3c7"
         selected={selected}
+		invalid={data.invalid}
       >
         Courrier postal
       </BaseNode>

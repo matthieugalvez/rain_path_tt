@@ -31,6 +31,7 @@ export default function ConditionNode({
         title="❓ Condition"
         background="#ffedd5"
         selected={selected}
+		invalid={data.invalid}
       >
         {
           conditionLabels[
