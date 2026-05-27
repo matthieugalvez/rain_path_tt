@@ -14,6 +14,8 @@ import WorkflowSidebar from './Sidebar'
 
 import { useWorkflowStore } from '../store/flowStore'
 
+import WorkflowErrors from '../utils/flowErrors'
+
 export default function WorkflowEditor() {
   const nodes =
     useWorkflowStore(
@@ -56,6 +58,8 @@ export default function WorkflowEditor() {
       <WorkflowToolbar />
 
 	  <WorkflowSidebar />
+
+	  <WorkflowErrors />
 
       <ReactFlow
         nodes={nodes}
