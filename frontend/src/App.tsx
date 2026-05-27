@@ -1,16 +1,18 @@
-import { useEffect, useState } from 'react';
-import { getHello } from './services/api';
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+
+import FlowPage from './pages/FlowPage'
+import HelloPage from './pages/HelloPage'
 
 function App() {
-  const [message, setMessage] = useState('');
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<FlowPage />} />
 
-  useEffect(() => {
-    getHello().then((data) => {
-      setMessage(data.message);
-    });
-  }, []);
-
-  return <h1>{message}</h1>;
+        <Route path="/hello" element={<HelloPage />} />
+      </Routes>
+    </BrowserRouter>
+  )
 }
 
-export default App;
+export default App
