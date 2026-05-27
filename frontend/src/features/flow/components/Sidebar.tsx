@@ -38,7 +38,7 @@ export default function WorkflowSidebar() {
         top: 0,
         right: 0,
 
-        width: 320,
+        width: 340,
         height: '100vh',
 
         background: 'white',
@@ -49,6 +49,9 @@ export default function WorkflowSidebar() {
         padding: 20,
 
         zIndex: 20,
+
+		boxShadow:
+			'-2px 0 8px rgba(0,0,0,0.04)',
       }}
     >
       <h2>

@@ -28,6 +28,13 @@ export default function BaseNode({
 
         background,
 
+        transition:
+          'all 0.15s ease',
+
+        transform: selected
+          ? 'scale(1.02)'
+          : 'scale(1)',
+
         boxShadow: selected
           ? '0 0 0 4px rgba(37,99,235,0.15)'
           : '0 2px 6px rgba(0,0,0,0.08)',

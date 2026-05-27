@@ -5,6 +5,8 @@ import {
 
 import BaseNode from './BaseNode'
 
+import { conditionLabels } from '../../constants/conditionLabels'
+
 export default function ConditionNode({
   data,
   selected,
@@ -17,7 +19,12 @@ export default function ConditionNode({
     >
       <Handle
         type="target"
-        position={Position.Top}
+        position={Position.Left}
+        style={{
+          width: 12,
+          height: 12,
+          background: '#2563eb',
+        }}
       />
 
       <BaseNode
@@ -25,14 +32,18 @@ export default function ConditionNode({
         background="#ffedd5"
         selected={selected}
       >
-        {data.conditionType}
+        {
+          conditionLabels[
+            data.conditionType
+          ]
+        }
       </BaseNode>
 
       <div
         style={{
           position: 'absolute',
-          right: -45,
-          top: '45%',
+          right: -40,
+          top: '30%',
           fontSize: 12,
           fontWeight: 'bold',
         }}
@@ -44,13 +55,19 @@ export default function ConditionNode({
         type="source"
         position={Position.Right}
         id="yes"
+        style={{
+          top: '35%',
+          width: 12,
+          height: 12,
+          background: '#16a34a',
+        }}
       />
 
       <div
         style={{
           position: 'absolute',
-          bottom: -22,
-          left: '45%',
+          right: -35,
+          top: '65%',
           fontSize: 12,
           fontWeight: 'bold',
         }}
@@ -60,8 +77,14 @@ export default function ConditionNode({
 
       <Handle
         type="source"
-        position={Position.Bottom}
+        position={Position.Right}
         id="no"
+        style={{
+          top: '70%',
+          width: 12,
+          height: 12,
+          background: '#dc2626',
+        }}
       />
     </div>
   )

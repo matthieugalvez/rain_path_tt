@@ -3,6 +3,7 @@ import {
   Background,
   Controls,
   useReactFlow,
+  MiniMap,
 } from '@xyflow/react'
 
 import '@xyflow/react/dist/style.css'
@@ -92,7 +93,10 @@ export default function WorkflowEditor() {
       style={{
         width: '100vw',
         height: '100vh',
-        background: '#f5f7fb',
+
+        background: '#f3f4f6',
+
+        position: 'relative',
       }}
     >
       <NodePalette />
@@ -101,25 +105,82 @@ export default function WorkflowEditor() {
 
       <WorkflowErrors />
 
+      {nodes.length <= 1 && (
+        <div
+          style={{
+            position: 'absolute',
+
+            top: '50%',
+            left: '50%',
+
+            transform:
+              'translate(-50%, -50%)',
+
+            opacity: 0.4,
+
+            fontSize: 24,
+
+            fontWeight: 600,
+
+            pointerEvents: 'none',
+
+            zIndex: 1,
+          }}
+        >
+          Drag nodes here
+        </div>
+      )}
+
       <ReactFlow
         nodes={nodes}
         edges={edges}
         nodeTypes={nodeTypes}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
+        onNodesChange={
+          onNodesChange
+        }
+        onEdgesChange={
+          onEdgesChange
+        }
         onConnect={onConnect}
         onNodeClick={(_, node) => {
           setSelectedNodeId(
             node.id
           )
         }}
+        onPaneClick={() => {
+          setSelectedNodeId(null)
+        }}
         onDrop={onDrop}
         onDragOver={onDragOver}
         fitView
+        fitViewOptions={{
+          padding: 0.3,
+        }}
+        defaultEdgeOptions={{
+          type: 'smoothstep',
+
+          animated: true,
+
+          style: {
+            strokeWidth: 2,
+          },
+        }}
       >
         <Background />
 
         <Controls />
+
+        <MiniMap
+          pannable
+          zoomable
+          style={{
+            backgroundColor:
+              '#ffffff',
+
+            border:
+              '1px solid #e5e7eb',
+          }}
+        />
       </ReactFlow>
     </div>
   )

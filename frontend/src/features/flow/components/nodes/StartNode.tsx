@@ -1,21 +1,36 @@
-import { Handle, Position } from '@xyflow/react'
+import {
+  Handle,
+  Position,
+} from '@xyflow/react'
 
 import BaseNode from './BaseNode'
 
-export default function StartNode() {
+export default function StartNode({
+  selected,
+}: any) {
   return (
-    <>
+    <div
+      style={{
+        position: 'relative',
+      }}
+    >
       <BaseNode
         title="🚀 Départ"
-        background="#d4f8d4"
+        background="#dcfce7"
+        selected={selected}
       >
         Examen effectué
       </BaseNode>
 
       <Handle
         type="source"
-        position={Position.Bottom}
+        position={Position.Right}
+        style={{
+          width: 12,
+          height: 12,
+          background: '#2563eb',
+        }}
       />
-    </>
+    </div>
   )
 }

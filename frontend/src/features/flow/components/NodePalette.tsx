@@ -107,7 +107,7 @@ export default function NodePalette() {
               background: '#fff',
 
               boxShadow:
-                '0 2px 4px rgba(0,0,0,0.05)',
+                '2px 0 8px rgba(0,0,0,0.04)',
             }}
           >
             {node.label}
