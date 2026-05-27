@@ -1,18 +1,8 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-
-import FlowPage from './pages/FlowPage'
-import HelloPage from './pages/HelloPage'
+import { RouterProvider } from 'react-router-dom'
+import { router } from './app/router'
 
 function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<FlowPage />} />
-
-        <Route path="/hello" element={<HelloPage />} />
-      </Routes>
-    </BrowserRouter>
-  )
+  return <RouterProvider router={router} />
 }
 
 export default App
