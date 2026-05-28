@@ -4,7 +4,6 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  output = "../generated/prisma"
 }
 
 model Workflow {

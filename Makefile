@@ -1,6 +1,6 @@
 dev:
-	make install &&
-	make prisma &&
+	make install && \
+	make prisma && \
 	make -j2 front back
 
 install:
