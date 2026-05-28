@@ -461,11 +461,9 @@ export default function WorkflowEditor() {
               node.id
             )
           }}
-          onPaneClick={() => {
-            setSelectedNodeId(
-              null
-            )
-          }}
+			onPaneClick={() => {
+			  setSelectedNodeId(null)
+			}}
           onDrop={onDrop}
           onDragOver={
             onDragOver

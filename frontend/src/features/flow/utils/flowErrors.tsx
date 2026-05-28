@@ -10,6 +10,12 @@ export default function WorkflowErrors() {
       (state) => state.nodes
     )
 
+	const selectedNodeId =
+	  useWorkflowStore(
+		(state) =>
+		  state.selectedNodeId
+	  )
+
   const edges =
     useWorkflowStore(
       (state) => state.edges
@@ -22,7 +28,16 @@ export default function WorkflowErrors() {
     )
   }, [nodes, edges])
 
-  if (errors.length === 0) {
+	const filteredErrors =
+	  selectedNodeId === null
+		? []
+		: errors.filter(
+			(error) =>
+			  error.nodeId ===
+				selectedNodeId
+		  )
+
+  if (filteredErrors.length === 0) {
     return null
   }
 
@@ -52,7 +67,7 @@ export default function WorkflowErrors() {
       </strong>
 
       <ul>
-        {errors.map(
+        {filteredErrors.map(
           (error, index) => (
             <li key={index}>
               {error.message}

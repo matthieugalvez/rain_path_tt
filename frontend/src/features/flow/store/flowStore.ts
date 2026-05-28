@@ -166,13 +166,76 @@ export const useWorkflowStore =
         ),
       })),
 
-    onConnect: (connection) =>
-      set((state) => ({
-        edges: addEdge(
-          connection,
-          state.edges
-        ),
-      })),
+	onConnect: (
+	  connection
+	) =>
+	  set((state) => {
+		const sourceNode =
+		  state.nodes.find(
+			(node) =>
+			  node.id ===
+			  connection.source
+		  )
+
+		let label =
+		  undefined
+
+		if (
+		  sourceNode?.type ===
+		  'condition'
+		) {
+		  label =
+			connection.sourceHandle ===
+			'yes'
+			  ? 'YES'
+			  : 'NO'
+		}
+
+		const filteredEdges =
+		  state.edges.filter(
+			(edge) => {
+			  // condition node:
+			  // replace only same handle
+			  if (
+				sourceNode?.type ===
+				'condition'
+			  ) {
+				return !(
+				  edge.source ===
+					connection.source &&
+				  edge.sourceHandle ===
+					connection.sourceHandle
+				)
+			  }
+
+			  // classic node:
+			  // replace all outgoing edges
+			  return (
+				edge.source !==
+				connection.source
+			  )
+			}
+		  )
+
+		return {
+		  edges: addEdge(
+			{
+			  ...connection,
+
+			  type:
+				'smoothstep',
+
+			  label,
+
+			  data: {
+				label,
+			  },
+			},
+
+			filteredEdges
+		  ),
+		}
+	  }),
 
     addNode: (type) =>
       set((state) => {
@@ -354,6 +417,7 @@ function getDefaultNodeData(type: string) {
     case 'condition':
       return {
         conditionType: 'email_known',
+		activeBranch: 'YES',
       }
 
     case 'email':

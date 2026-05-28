@@ -24,12 +24,6 @@ export function validateWorkflow(
     errors
   )
 
-  validateOrphanNodes(
-    nodes,
-    edges,
-    errors
-  )
-
 	validateNodeConnections(
   		nodes,
   		edges,
@@ -123,33 +117,6 @@ function validateConditionNodes(
 
         message:
           'La condition doit avoir une sortie YES et NO',
-      })
-    }
-  }
-}
-
-function validateOrphanNodes(
-  nodes: Node[],
-  edges: Edge[],
-  errors: ValidationError[]
-) {
-  for (const node of nodes) {
-    if (node.type === 'start') {
-      continue
-    }
-
-    const hasIncoming =
-      edges.some(
-        (edge) =>
-          edge.target === node.id
-      )
-
-    if (!hasIncoming) {
-      errors.push({
-        nodeId: node.id,
-
-        message:
-          'Node non relié',
       })
     }
   }
