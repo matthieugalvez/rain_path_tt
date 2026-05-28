@@ -37,12 +37,14 @@ export default function WorkflowEditor() {
 
   const onNodesChange =
     useWorkflowStore(
-      (state) => state.onNodesChange
+      (state) =>
+        state.onNodesChange
     )
 
   const onEdgesChange =
     useWorkflowStore(
-      (state) => state.onEdgesChange
+      (state) =>
+        state.onEdgesChange
     )
 
   const onConnect =
@@ -61,106 +63,124 @@ export default function WorkflowEditor() {
         state.setSelectedNodeId
     )
 
-	const errors = validateWorkflow(
-	  nodes,
-	  edges
-	)
+  const currentSimulationNodeId =
+    useWorkflowStore(
+      (state) =>
+        state.currentSimulationNodeId
+    )
 
-	const invalidNodeIds =
-	  getInvalidNodeIds(errors)
+  const completedSimulationNodeIds =
+    useWorkflowStore(
+      (state) =>
+        state.completedSimulationNodeIds
+    )
 
-	const currentSimulationNodeId =
-	  useWorkflowStore(
-		(state) =>
-		  state.currentSimulationNodeId
-	  )
+  const activeSimulationEdgeIds =
+    useWorkflowStore(
+      (state) =>
+        state.activeSimulationEdgeIds
+    )
 
-	const completedSimulationNodeIds =
-	  useWorkflowStore(
-		(state) =>
-		  state.completedSimulationNodeIds
-	  )
+  const setSimulationState =
+    useWorkflowStore(
+      (state) =>
+        state.setSimulationState
+    )
 
-	const activeSimulationEdgeIds =
-	  useWorkflowStore(
-		(state) =>
-		  state.activeSimulationEdgeIds
-	  )
+  const errors =
+    validateWorkflow(
+      nodes,
+      edges
+    )
 
-	const setSimulationState =
-	  useWorkflowStore(
-		(state) =>
-		  state.setSimulationState
-	  )
+  const invalidNodeIds =
+    getInvalidNodeIds(
+      errors
+    )
 
-	const styledNodes = nodes.map(
-	  (node) => ({
-		...node,
+  const styledNodes = nodes.map(
+    (node) => ({
+      ...node,
 
-		data: {
-		  ...node.data,
+      data: {
+        ...node.data,
 
-		  invalid:
-			invalidNodeIds.has(
-			  node.id
-			),
+        invalid:
+          invalidNodeIds.has(
+            node.id
+          ),
 
-		  simulationStatus:
-			node.id ===
-			currentSimulationNodeId
-			  ? 'current'
-			  : completedSimulationNodeIds.includes(
-					node.id
-				  )
-				? 'completed'
-				: 'future',
-		},
-	  })
-	)
+        simulationStatus:
+          node.id ===
+          currentSimulationNodeId
+            ? 'current'
+            : completedSimulationNodeIds.includes(
+                  node.id
+                )
+              ? 'completed'
+              : 'future',
+      },
+    })
+  )
 
-	const styledEdges = edges.map(
-	  (edge) => {
-		const isActive =
-		  activeSimulationEdgeIds.includes(
-			edge.id
+  const styledEdges = edges.map(
+    (edge) => {
+		const currentNode =
+		  nodes.find(
+			(node) =>
+			  node.id ===
+			  currentSimulationNodeId
 		  )
 
-		const isSelected =
-		  edge.selected
+		const isActive =
+		  currentNode?.type ===
+		  'condition'
+			? edge.source ===
+				currentNode.id &&
+			  edge.data?.label ===
+				currentNode.data
+				  ?.activeBranch
+			: activeSimulationEdgeIds.includes(
+				edge.id
+			  )
 
-		return {
-		  ...edge,
+      const isSelected =
+        edge.selected
 
-		  animated:
-			isSelected ||
-			isActive,
+      return {
+        ...edge,
 
-		  style: {
-			...edge.style,
+        animated:
+          isSelected ||
+          isActive,
 
-			stroke: isSelected
-			  ? '#2563eb'
-			  : isActive
-				? '#f59e0b'
-				: '#94a3b8',
+        style: {
+          ...edge.style,
 
-			strokeWidth:
-			  isSelected
-				? 5
-				: isActive
-				  ? 4
-				  : 2,
+          stroke:
+            isSelected
+              ? '#2563eb'
+              : isActive
+                ? '#f59e0b'
+                : '#94a3b8',
 
-			opacity:
-			  isSelected
-				? 1
-				: isActive
-				  ? 1
-				  : 0.45,
-		  },
-		}
-	  }
-	)
+          strokeWidth:
+            isSelected
+              ? 5
+              : isActive
+                ? 4
+                : 2,
+
+          opacity:
+            isSelected
+              ? 1
+              : isActive
+                ? 1
+                : 0.45,
+        },
+      }
+    }
+  )
 
   const { screenToFlowPosition } =
     useReactFlow()
@@ -197,193 +217,240 @@ export default function WorkflowEditor() {
     createNode(type, position)
   }
 
-	return (
-	  <div
-		style={{
-		  width: '100vw',
-		  height: '100vh',
+  return (
+    <div
+      style={{
+        width: '100vw',
+        height: '100vh',
 
-		  background: '#f3f4f6',
+        background:
+          '#f3f4f6',
 
-		  display: 'flex',
-		  flexDirection: 'column',
-		}}
-	  >
-		<WorkflowTopbar />
+        display: 'flex',
 
-		<div
-		  style={{
-			flex: 1,
+        flexDirection:
+          'column',
+      }}
+    >
+      <WorkflowTopbar />
 
-			position: 'relative',
-		  }}
-		>
-		  <NodePalette />
+      <div
+        style={{
+          flex: 1,
 
-		  <WorkflowSidebar />
+          position:
+            'relative',
+        }}
+      >
+        <NodePalette />
 
-		  <WorkflowErrors />
+        <WorkflowSidebar />
 
-		<div
-		  style={{
-			position: 'absolute',
+        <WorkflowErrors />
 
-			bottom: 20,
-			left: 280,
+        <div
+          style={{
+            position:
+              'absolute',
 
-			zIndex: 50,
+            bottom: 20,
+            left: 280,
 
-			display: 'flex',
+            zIndex: 50,
 
-			gap: 10,
-		  }}
-		>
-		  <button
-			onClick={() => {
-			  const startNode =
-				nodes.find(
-				  (node) =>
-					node.type ===
-					'start'
-				)
+            display: 'flex',
 
-			  if (!startNode) {
-				return
-			  }
+            gap: 10,
+          }}
+        >
+          <button
+            onClick={() => {
+              const startNode =
+                nodes.find(
+                  (node) =>
+                    node.type ===
+                    'start'
+                )
 
-			  const outgoingEdge =
-				edges.find(
-				  (edge) =>
-					edge.source ===
-					startNode.id
-				)
+              if (!startNode) {
+                return
+              }
 
-			  setSimulationState(
-				startNode.id,
+              const outgoingEdge =
+                edges.find(
+                  (edge) =>
+                    edge.source ===
+                    startNode.id
+                )
 
-				[],
+              setSimulationState(
+                startNode.id,
 
-				outgoingEdge
-				  ? [outgoingEdge.id]
-				  : []
-			  )
-			}}
-		  >
-			Start Simulation
-		  </button>
+                [],
 
-		  <button
-			onClick={() => {
-			  if (
-				!currentSimulationNodeId
-			  ) {
-				return
-			  }
+                outgoingEdge
+                  ? [
+                      outgoingEdge.id,
+                    ]
+                  : []
+              )
+            }}
+          >
+            Start Simulation
+          </button>
 
-			  const currentEdge =
-				edges.find(
-				  (edge) =>
-					edge.source ===
-					currentSimulationNodeId
-				)
+          <button
+            onClick={() => {
+              if (
+                !currentSimulationNodeId
+              ) {
+                return
+              }
 
-			  if (!currentEdge) {
-				return
-			  }
+              const currentNode =
+                nodes.find(
+                  (node) =>
+                    node.id ===
+                    currentSimulationNodeId
+                )
 
-			  const nextNodeId =
-				currentEdge.target
+              if (!currentNode) {
+                return
+              }
 
-			  const nextOutgoingEdge =
-				edges.find(
-				  (edge) =>
-					edge.source ===
-					nextNodeId
-				)
+              let currentEdge
 
-			  setSimulationState(
-				nextNodeId,
+              if (
+                currentNode.type ===
+                'condition'
+              ) {
+                currentEdge =
+                  edges.find(
+                    (edge) =>
+                      edge.source ===
+                        currentNode.id &&
+                      edge.data
+                        ?.label ===
+                        currentNode
+                          .data
+                          ?.activeBranch
+                  )
+              } else {
+                currentEdge =
+                  edges.find(
+                    (edge) =>
+                      edge.source ===
+                      currentNode.id
+                  )
+              }
 
-				[
-				  ...completedSimulationNodeIds,
+              if (!currentEdge) {
+                return
+              }
 
-				  currentSimulationNodeId,
-				],
+              const nextNodeId =
+                currentEdge.target
 
-				nextOutgoingEdge
-				  ? [nextOutgoingEdge.id]
-				  : []
-			  )
-			}}
-		  >
-			Next Step
-		  </button>
+              const nextOutgoingEdge =
+                edges.find(
+                  (edge) =>
+                    edge.source ===
+                    nextNodeId
+                )
 
-		  <button
-			onClick={() => {
-			  setSimulationState(
-				null,
-				[],
-				[]
-			  )
-			}}
-		  >
-			Reset
-		  </button>
-		</div>
+              setSimulationState(
+                nextNodeId,
 
-		  <ReactFlow
-			nodes={styledNodes}
-			edges={styledEdges}
-			nodeTypes={nodeTypes}
-			onNodesChange={
-			  onNodesChange
-			}
-			onEdgesChange={
-			  onEdgesChange
-			}
-			onConnect={onConnect}
-			onNodeClick={(_, node) => {
-			  setSelectedNodeId(
-				node.id
-			  )
-			}}
-			onPaneClick={() => {
-			  setSelectedNodeId(null)
-			}}
-			onDrop={onDrop}
-			onDragOver={onDragOver}
-			fitView
-			fitViewOptions={{
-			  padding: 0.3,
-			}}
-			defaultEdgeOptions={{
-			  type: 'smoothstep',
+                [
+                  ...completedSimulationNodeIds,
 
-			  animated: true,
+                  currentSimulationNodeId,
+                ],
 
-			  style: {
-				strokeWidth: 2,
-			  },
-			}}
-		  >
-			<Background />
+                nextOutgoingEdge
+                  ? [
+                      nextOutgoingEdge.id,
+                    ]
+                  : []
+              )
+            }}
+          >
+            Next Step
+          </button>
 
-			<Controls />
+          <button
+            onClick={() => {
+              setSimulationState(
+                null,
+                [],
+                []
+              )
+            }}
+          >
+            Reset
+          </button>
+        </div>
 
-			<MiniMap
-			  pannable
-			  zoomable
-			  style={{
-				backgroundColor:
-				  '#ffffff',
+        <ReactFlow
+          nodes={styledNodes}
+          edges={styledEdges}
+          nodeTypes={nodeTypes}
+          onNodesChange={
+            onNodesChange
+          }
+          onEdgesChange={
+            onEdgesChange
+          }
+          onConnect={onConnect}
+          onNodeClick={(
+            _,
+            node
+          ) => {
+            setSelectedNodeId(
+              node.id
+            )
+          }}
+          onPaneClick={() => {
+            setSelectedNodeId(
+              null
+            )
+          }}
+          onDrop={onDrop}
+          onDragOver={
+            onDragOver
+          }
+          fitView
+          fitViewOptions={{
+            padding: 0.3,
+          }}
+          defaultEdgeOptions={{
+            type:
+              'smoothstep',
 
-				border:
-				  '1px solid #e5e7eb',
-			  }}
-			/>
-		  </ReactFlow>
-		</div>
-	  </div>
-	)
+            animated: true,
+
+            style: {
+              strokeWidth: 2,
+            },
+          }}
+        >
+          <Background />
+
+          <Controls />
+
+          <MiniMap
+            pannable
+            zoomable
+            style={{
+              backgroundColor:
+                '#ffffff',
+
+              border:
+                '1px solid #e5e7eb',
+            }}
+          />
+        </ReactFlow>
+      </div>
+    </div>
+  )
 }

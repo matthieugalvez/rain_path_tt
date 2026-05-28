@@ -53,12 +53,28 @@ export default function WorkflowSimulationPanel() {
 
         result.push(current)
 
-        const edge =
-          edges.find(
+        let edge
+
+        if (
+          current.type ===
+          'condition'
+        ) {
+          edge = edges.find(
+            (edge) =>
+              edge.source ===
+                current.id &&
+              edge.data
+                ?.label ===
+                current.data
+                  ?.activeBranch
+          )
+        } else {
+          edge = edges.find(
             (edge) =>
               edge.source ===
               current.id
           )
+        }
 
         if (!edge) {
           break
@@ -94,17 +110,40 @@ export default function WorkflowSimulationPanel() {
             node.id
         )
 
-    const activeEdges =
-      edges
-        .filter(
-          (edge) =>
-            edge.source ===
-            current.id
-        )
-        .map(
-          (edge) =>
-            edge.id
-        )
+    let activeEdges = []
+
+    if (
+      current.type ===
+      'condition'
+    ) {
+      activeEdges =
+        edges
+          .filter(
+            (edge) =>
+              edge.source ===
+                current.id &&
+              edge.data
+                ?.label ===
+                current.data
+                  ?.activeBranch
+          )
+          .map(
+            (edge) =>
+              edge.id
+          )
+    } else {
+      activeEdges =
+        edges
+          .filter(
+            (edge) =>
+              edge.source ===
+              current.id
+          )
+          .map(
+            (edge) =>
+              edge.id
+          )
+    }
 
     setSimulationState(
       current.id,
