@@ -4,7 +4,7 @@ import {
 } from '@nestjs/common'
 
 import { PrismaClient }
-from '@prisma/client'
+from '../../generated/prisma'
 
 import { PrismaBetterSqlite3 }
 from '@prisma/adapter-better-sqlite3'
