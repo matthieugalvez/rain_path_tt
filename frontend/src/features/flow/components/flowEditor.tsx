@@ -35,6 +35,11 @@ export default function WorkflowEditor() {
       (state) => state.edges
     )
 
+	const selectedNodes =
+	  nodes.filter(
+		(node) => node.selected
+	  )
+
   const onNodesChange =
     useWorkflowStore(
       (state) =>
@@ -62,6 +67,12 @@ export default function WorkflowEditor() {
       (state) =>
         state.setSelectedNodeId
     )
+
+	const deleteSelectedElements =
+	  useWorkflowStore(
+		(state) =>
+		  state.deleteSelectedElements
+	  )
 
   const currentSimulationNodeId =
     useWorkflowStore(
@@ -394,6 +405,7 @@ export default function WorkflowEditor() {
         <ReactFlow
           nodes={styledNodes}
           edges={styledEdges}
+			deleteKeyCode={null}
           nodeTypes={nodeTypes}
           onNodesChange={
             onNodesChange

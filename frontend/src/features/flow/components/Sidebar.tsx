@@ -22,6 +22,12 @@ export default function WorkflowSidebar() {
       state.setSelectedNodeId
   	)
 
+	const deleteSelectedElements =
+	  useWorkflowStore(
+		(state) =>
+		  state.deleteSelectedElements
+	  )
+
   const selectedNode = nodes.find(
     (node) =>
       node.id === selectedNodeId
@@ -31,6 +37,19 @@ export default function WorkflowSidebar() {
     return null
   }
 
+	const selectedNodes =
+	  nodes.filter(
+		(node) =>
+		  node.selected
+	  )
+
+	const deletableNodes =
+	  selectedNodes.filter(
+		(node) =>
+		  node.type !== 'start' &&
+		  node.type !== 'end'
+	  )
+
   return (
     <div
       style={{
@@ -39,7 +58,7 @@ export default function WorkflowSidebar() {
         right: 0,
 		bottom: 0,
 
-        width: 340,
+        width: 240,
 
         background: '#ffffff',
 
@@ -80,6 +99,17 @@ export default function WorkflowSidebar() {
           node={selectedNode}
         />
       )}
+
+	<button
+	  onClick={() => {
+		deleteSelectedElements()
+	  }}
+	  disabled={
+		deletableNodes.length === 0
+	  }
+	>
+	  Delete selection
+	</button>
 
 	  <button
 	  	onClick={() =>

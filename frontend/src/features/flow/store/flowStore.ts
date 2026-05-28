@@ -41,6 +41,9 @@ interface WorkflowState {
 	  id: string | null
   ) => void
 
+	deleteSelectedElements:
+		() => void
+
   updateNodeData: (
 	  nodeId: string,
 	  data: any
@@ -92,7 +95,7 @@ export const useWorkflowStore =
 		type: 'end',
 
 		position: {
-		  x: 500,
+		  x: 900,
 		  y: 200,
 		},
 
@@ -120,13 +123,40 @@ export const useWorkflowStore =
         edges,
       }),
 
-    onNodesChange: (changes) =>
-      set((state) => ({
-        nodes: applyNodeChanges(
-          changes,
-          state.nodes
-        ),
-      })),
+	onNodesChange: (
+	  changes
+	) =>
+	  set((state) => ({
+		nodes:
+		  applyNodeChanges(
+			changes.filter(
+			  (change) => {
+				if (
+				  change.type !==
+				  'remove'
+				) {
+				  return true
+				}
+
+				const node =
+				  state.nodes.find(
+					(n) =>
+					  n.id ===
+					  change.id
+				  )
+
+				return (
+				  node?.type !==
+					'start' &&
+				  node?.type !==
+					'end'
+				)
+			  }
+			),
+
+			state.nodes
+		  ),
+	  })),
 
     onEdgesChange: (changes) =>
       set((state) => ({
@@ -169,6 +199,46 @@ export const useWorkflowStore =
       }),
 
 	selectedNodeId: null,
+
+	deleteSelectedElements:
+	  () =>
+		set((state) => {
+		  const deletableNodeIds =
+			state.nodes
+			  .filter(
+				(node) =>
+				  node.selected &&
+				  node.type !==
+					'start' &&
+				  node.type !==
+					'end'
+			  )
+			  .map(
+				(node) =>
+				  node.id
+			  )
+
+		  return {
+			nodes:
+			  state.nodes.filter(
+				(node) =>
+				  !deletableNodeIds.includes(
+					node.id
+				  )
+			  ),
+
+			edges:
+			  state.edges.filter(
+				(edge) =>
+				  !deletableNodeIds.includes(
+					edge.source
+				  ) &&
+				  !deletableNodeIds.includes(
+					edge.target
+				  )
+			  ),
+		  }
+		}),
 
 	currentSimulationNodeId:
 	  null,

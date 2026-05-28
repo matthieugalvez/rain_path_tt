@@ -28,11 +28,6 @@ const nodeTypes = [
     type: 'postal',
     label: '📮 Courrier',
   },
-
-  {
-    type: 'end',
-    label: '🏁 Fin',
-  },
 ]
 
 export default function NodePalette() {
@@ -56,7 +51,7 @@ export default function NodePalette() {
         top: 0,
         left: 0,
 
-        width: 260,
+        width: 200,
         height: '100vh',
 
         background: '#ffffff',
