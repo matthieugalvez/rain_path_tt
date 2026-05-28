@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   Post,
+  Delete,
 } from '@nestjs/common'
 
 import { WorkflowsService }
@@ -24,10 +25,20 @@ export class WorkflowsController {
     @Body()
     dto: CreateWorkflowDto
   ) {
-    return this.workflowsService.create(
+    return this.workflowsService.save(
       dto
     )
   }
+
+	@Delete(':id')
+	remove(
+	  @Param('id')
+	  id: string
+	) {
+	  return this.workflowsService.remove(
+		id
+	  )
+	}
 
   @Get()
   findAll() {

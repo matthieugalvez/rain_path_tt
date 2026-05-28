@@ -13,23 +13,43 @@ export class WorkflowsService {
     private prisma: PrismaService
   ) {}
 
-  async create(
-    dto: CreateWorkflowDto
-  ) {
-    return this.prisma.workflow.create({
-      data: {
-        name: dto.name,
+	async save(
+	  dto: CreateWorkflowDto
+	) {
+	  return this.prisma.workflow.upsert({
+		where: {
+		  name: dto.name,
+		},
 
-        nodesJson: JSON.stringify(
-          dto.nodes
-        ),
+		update: {
+		  nodesJson: JSON.stringify(
+			dto.nodes
+		  ),
 
-        edgesJson: JSON.stringify(
-          dto.edges
-        ),
-      },
-    })
-  }
+		  edgesJson: JSON.stringify(
+			dto.edges
+		  ),
+		},
+
+		create: {
+		  name: dto.name,
+
+		  nodesJson: JSON.stringify(
+			dto.nodes
+		  ),
+
+		  edgesJson: JSON.stringify(
+			dto.edges
+		  ),
+		},
+	  })
+	}
+
+	async remove(id: string) {
+	  return this.prisma.workflow.delete({
+		where: { id },
+	  })
+	}
 
   async findAll() {
     return this.prisma.workflow.findMany({

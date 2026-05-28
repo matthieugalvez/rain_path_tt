@@ -7,6 +7,7 @@ import {
   getWorkflow,
   getWorkflows,
   saveWorkflow,
+  deleteWorkflow,
 } from '../../../api/workflowApi'
 
 import { useWorkflowStore }
@@ -231,6 +232,62 @@ export default function WorkflowTopbar() {
             )
           )}
         </select>
+			<button
+			  onClick={async () => {
+				const selected =
+				  workflows.find(
+					(workflow) =>
+					  workflow.name ===
+					  workflowName
+				  )
+
+				if (!selected) {
+				  return
+				}
+
+				const confirmed =
+				  confirm(
+					`Supprimer "${workflowName}" ?`
+				  )
+
+				if (!confirmed) {
+				  return
+				}
+
+				try {
+				  await deleteWorkflow(
+					selected.id
+				  )
+
+				  await refreshWorkflows()
+
+				  alert(
+					'Workflow supprimé'
+				  )
+				} catch (error) {
+				  console.error(error)
+
+				  alert(
+					'Erreur suppression'
+				  )
+				}
+			  }}
+			  style={{
+				padding: '10px 14px',
+
+				borderRadius: 10,
+
+				border: 'none',
+
+				background: '#dc2626',
+
+				color: 'white',
+
+				cursor: 'pointer',
+			  }}
+			>
+			  Delete
+			</button>
       </div>
     </div>
   )

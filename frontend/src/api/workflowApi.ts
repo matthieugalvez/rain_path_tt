@@ -37,6 +37,25 @@ export async function saveWorkflow(
   return response.json()
 }
 
+export async function deleteWorkflow(
+  id: string
+) {
+  const response = await fetch(
+    `${API_URL}/workflows/${id}`,
+    {
+      method: 'DELETE',
+    }
+  )
+
+  if (!response.ok) {
+    throw new Error(
+      'Erreur suppression workflow'
+    )
+  }
+
+  return response.json()
+}
+
 export async function getWorkflows() {
   const response = await fetch(
     `${API_URL}/workflows`
