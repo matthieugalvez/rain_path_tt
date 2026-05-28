@@ -62,6 +62,23 @@ export default function WorkflowEditor() {
       (state) => state.createNode
     )
 
+	const selectedNode =
+	  useWorkflowStore(
+		(state) =>
+		  state.nodes.find(
+			(n) =>
+			  n.id ===
+			  state.selectedNodeId
+		  )
+	  )
+
+	const isEditable =
+	  selectedNode && (
+		  selectedNode.type == 'delay' ||
+		  selectedNode.type == 'email' ||
+		  selectedNode.type == 'condition'
+	)
+
   const setSelectedNodeId =
     useWorkflowStore(
       (state) =>
@@ -275,7 +292,9 @@ export default function WorkflowEditor() {
       >
         <NodePalette />
 
-        <WorkflowSidebar />
+	{isEditable && (
+		<WorkflowSidebar />
+	)}
 
         <WorkflowErrors />
 

@@ -99,25 +99,6 @@ export default function WorkflowSidebar() {
           node={selectedNode}
         />
       )}
-
-	<button
-	  onClick={() => {
-		deleteSelectedElements()
-	  }}
-	  disabled={
-		deletableNodes.length === 0
-	  }
-	>
-	  Delete selection
-	</button>
-
-	  <button
-	  	onClick={() =>
-			setSelectedNodeId(null)
-		}
-		>
-		Fermer
-		</button>
     </div>
   )
 }
