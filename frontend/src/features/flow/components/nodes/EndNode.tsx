@@ -30,6 +30,9 @@ export default function EndNode({
         background="#fee2e2"
         selected={selected}
 		invalid={data.invalid}
+		simulationStatus={
+    		data.simulationStatus
+		}
       >
         Fin du workflow
       </BaseNode>

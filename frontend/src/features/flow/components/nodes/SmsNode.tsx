@@ -30,6 +30,9 @@ export default function SmsNode({
         background="#e0f2fe"
         selected={selected}
 		invalid={data.invalid}
+		simulationStatus={
+    		data.simulationStatus
+		}
       >
         Envoi SMS
       </BaseNode>

@@ -6,6 +6,10 @@ interface Props {
   background?: string
   selected?: boolean
   invalid?: boolean
+	simulationStatus?:
+	  | 'completed'
+	  | 'current'
+	  | 'future'
 }
 
 export default function BaseNode({
@@ -14,7 +18,31 @@ export default function BaseNode({
   background = '#ffffff',
   selected = false,
   invalid = false,
+	simulationStatus = 'future',
 }: Props) {
+	const runtimeStyle =
+	  simulationStatus ===
+	  'completed'
+		? {
+			opacity: 0.4,
+
+			filter:
+			  'grayscale(1)',
+
+			transition:
+			  'all 0.25s ease',
+		  }
+		: simulationStatus ===
+			'current'
+		  ? {
+			  boxShadow:
+				'0 0 0 8px rgba(245,158,11,0.3)',
+
+			  transition:
+				'all 0.25s ease',
+			}
+		  : {}
+
   return (
     <div
       style={{
@@ -24,11 +52,16 @@ export default function BaseNode({
 
         borderRadius: 14,
 
+		...runtimeStyle,
+
 		border: invalid
 		  ? '2px solid #dc2626'
 		  : selected
 			? '2px solid #2563eb'
-			: '1px solid #d1d5db',
+			: simulationStatus ===
+				'current'
+			  ? '2px solid #f59e0b'
+			  : '1px solid #d1d5db',
 
         background,
 

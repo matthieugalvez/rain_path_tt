@@ -30,6 +30,9 @@ export default function PostalNode({
         background="#fef3c7"
         selected={selected}
 		invalid={data.invalid}
+		simulationStatus={
+    		data.simulationStatus
+		}
       >
         Courrier postal
       </BaseNode>

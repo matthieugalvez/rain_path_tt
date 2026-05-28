@@ -30,6 +30,9 @@ export default function EmailNode({
         background="#dbeafe"
         selected={selected}
 		invalid={data.invalid}
+		simulationStatus={
+    		data.simulationStatus
+		}
       >
         {data.subject || 'Envoi email'}
       </BaseNode>

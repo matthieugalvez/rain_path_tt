@@ -30,6 +30,9 @@ export default function DelayNode({
         background="#fef3c7"
         selected={selected}
 		invalid={data.invalid}
+		simulationStatus={
+    		data.simulationStatus
+		}
       >
         Attendre {data.days} jours
       </BaseNode>

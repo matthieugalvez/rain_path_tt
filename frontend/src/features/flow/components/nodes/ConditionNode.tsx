@@ -32,6 +32,9 @@ export default function ConditionNode({
         background="#ffedd5"
         selected={selected}
 		invalid={data.invalid}
+		simulationStatus={
+    		data.simulationStatus
+		}
       >
         {
           conditionLabels[

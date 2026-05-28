@@ -1,3 +1,5 @@
+import React from 'react'
+
 import {
   ReactFlow,
   Background,
@@ -67,6 +69,30 @@ export default function WorkflowEditor() {
 	const invalidNodeIds =
 	  getInvalidNodeIds(errors)
 
+	const currentSimulationNodeId =
+	  useWorkflowStore(
+		(state) =>
+		  state.currentSimulationNodeId
+	  )
+
+	const completedSimulationNodeIds =
+	  useWorkflowStore(
+		(state) =>
+		  state.completedSimulationNodeIds
+	  )
+
+	const activeSimulationEdgeIds =
+	  useWorkflowStore(
+		(state) =>
+		  state.activeSimulationEdgeIds
+	  )
+
+	const setSimulationState =
+	  useWorkflowStore(
+		(state) =>
+		  state.setSimulationState
+	  )
+
 	const styledNodes = nodes.map(
 	  (node) => ({
 		...node,
@@ -78,8 +104,62 @@ export default function WorkflowEditor() {
 			invalidNodeIds.has(
 			  node.id
 			),
+
+		  simulationStatus:
+			node.id ===
+			currentSimulationNodeId
+			  ? 'current'
+			  : completedSimulationNodeIds.includes(
+					node.id
+				  )
+				? 'completed'
+				: 'future',
 		},
 	  })
+	)
+
+	const styledEdges = edges.map(
+	  (edge) => {
+		const isActive =
+		  activeSimulationEdgeIds.includes(
+			edge.id
+		  )
+
+		const isSelected =
+		  edge.selected
+
+		return {
+		  ...edge,
+
+		  animated:
+			isSelected ||
+			isActive,
+
+		  style: {
+			...edge.style,
+
+			stroke: isSelected
+			  ? '#2563eb'
+			  : isActive
+				? '#f59e0b'
+				: '#94a3b8',
+
+			strokeWidth:
+			  isSelected
+				? 5
+				: isActive
+				  ? 4
+				  : 2,
+
+			opacity:
+			  isSelected
+				? 1
+				: isActive
+				  ? 1
+				  : 0.45,
+		  },
+		}
+	  }
 	)
 
   const { screenToFlowPosition } =
@@ -144,9 +224,117 @@ export default function WorkflowEditor() {
 
 		  <WorkflowErrors />
 
+		<div
+		  style={{
+			position: 'absolute',
+
+			bottom: 20,
+			left: 280,
+
+			zIndex: 50,
+
+			display: 'flex',
+
+			gap: 10,
+		  }}
+		>
+		  <button
+			onClick={() => {
+			  const startNode =
+				nodes.find(
+				  (node) =>
+					node.type ===
+					'start'
+				)
+
+			  if (!startNode) {
+				return
+			  }
+
+			  const outgoingEdge =
+				edges.find(
+				  (edge) =>
+					edge.source ===
+					startNode.id
+				)
+
+			  setSimulationState(
+				startNode.id,
+
+				[],
+
+				outgoingEdge
+				  ? [outgoingEdge.id]
+				  : []
+			  )
+			}}
+		  >
+			Start Simulation
+		  </button>
+
+		  <button
+			onClick={() => {
+			  if (
+				!currentSimulationNodeId
+			  ) {
+				return
+			  }
+
+			  const currentEdge =
+				edges.find(
+				  (edge) =>
+					edge.source ===
+					currentSimulationNodeId
+				)
+
+			  if (!currentEdge) {
+				return
+			  }
+
+			  const nextNodeId =
+				currentEdge.target
+
+			  const nextOutgoingEdge =
+				edges.find(
+				  (edge) =>
+					edge.source ===
+					nextNodeId
+				)
+
+			  setSimulationState(
+				nextNodeId,
+
+				[
+				  ...completedSimulationNodeIds,
+
+				  currentSimulationNodeId,
+				],
+
+				nextOutgoingEdge
+				  ? [nextOutgoingEdge.id]
+				  : []
+			  )
+			}}
+		  >
+			Next Step
+		  </button>
+
+		  <button
+			onClick={() => {
+			  setSimulationState(
+				null,
+				[],
+				[]
+			  )
+			}}
+		  >
+			Reset
+		  </button>
+		</div>
+
 		  <ReactFlow
 			nodes={styledNodes}
-			edges={edges}
+			edges={styledEdges}
 			nodeTypes={nodeTypes}
 			onNodesChange={
 			  onNodesChange

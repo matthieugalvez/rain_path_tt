@@ -30,6 +30,9 @@ export default function WhatsappNode({
         background="#dcfce7"
         selected={selected}
 		invalid={data.invalid}
+		simulationStatus={
+    		data.simulationStatus
+		}
       >
         Envoi WhatsApp
       </BaseNode>

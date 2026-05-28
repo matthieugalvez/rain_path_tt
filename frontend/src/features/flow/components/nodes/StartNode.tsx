@@ -20,6 +20,9 @@ export default function StartNode({
         background="#dcfce7"
         selected={selected}
 		invalid={data.invalid}
+		simulationStatus={
+    		data.simulationStatus
+		}
       >
         Examen effectué
       </BaseNode>
