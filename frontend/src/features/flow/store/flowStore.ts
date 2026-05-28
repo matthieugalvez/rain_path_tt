@@ -53,6 +53,11 @@ interface WorkflowState {
     	y: number
   	}
   ) => void
+
+	setWorkflow: (
+	  nodes: any[],
+	  edges: any[]
+	) => void
 }
 
 export const useWorkflowStore =
@@ -208,6 +213,15 @@ export const useWorkflowStore =
 			  ],
 			}
 		  }),
+
+	setWorkflow: (
+	  nodes,
+	  edges
+	) =>
+	  set({
+		nodes,
+		edges,
+	  }),
   }))
 
 function getDefaultNodeData(type: string) {

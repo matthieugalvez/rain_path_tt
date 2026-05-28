@@ -13,6 +13,7 @@ import { nodeTypes } from './nodes'
 import WorkflowSidebar from './Sidebar'
 import WorkflowErrors from '../utils/flowErrors'
 import NodePalette from './NodePalette'
+import WorkflowTopbar from './flowTopbar'
 
 import { useWorkflowStore } from '../store/flowStore'
 
@@ -116,74 +117,85 @@ export default function WorkflowEditor() {
     createNode(type, position)
   }
 
-  return (
-    <div
-      style={{
-        width: '100vw',
-        height: '100vh',
+	return (
+	  <div
+		style={{
+		  width: '100vw',
+		  height: '100vh',
 
-        background: '#f3f4f6',
+		  background: '#f3f4f6',
 
-        position: 'relative',
-      }}
-    >
-      <NodePalette />
+		  display: 'flex',
+		  flexDirection: 'column',
+		}}
+	  >
+		<WorkflowTopbar />
 
-      <WorkflowSidebar />
+		<div
+		  style={{
+			flex: 1,
 
-      <WorkflowErrors />
+			position: 'relative',
+		  }}
+		>
+		  <NodePalette />
 
-      <ReactFlow
-        nodes={styledNodes}
-        edges={edges}
-        nodeTypes={nodeTypes}
-        onNodesChange={
-          onNodesChange
-        }
-        onEdgesChange={
-          onEdgesChange
-        }
-        onConnect={onConnect}
-        onNodeClick={(_, node) => {
-          setSelectedNodeId(
-            node.id
-          )
-        }}
-        onPaneClick={() => {
-          setSelectedNodeId(null)
-        }}
-        onDrop={onDrop}
-        onDragOver={onDragOver}
-        fitView
-        fitViewOptions={{
-          padding: 0.3,
-        }}
-        defaultEdgeOptions={{
-          type: 'smoothstep',
+		  <WorkflowSidebar />
 
-          animated: true,
+		  <WorkflowErrors />
 
-          style: {
-            strokeWidth: 2,
-          },
-        }}
-      >
-        <Background />
+		  <ReactFlow
+			nodes={styledNodes}
+			edges={edges}
+			nodeTypes={nodeTypes}
+			onNodesChange={
+			  onNodesChange
+			}
+			onEdgesChange={
+			  onEdgesChange
+			}
+			onConnect={onConnect}
+			onNodeClick={(_, node) => {
+			  setSelectedNodeId(
+				node.id
+			  )
+			}}
+			onPaneClick={() => {
+			  setSelectedNodeId(null)
+			}}
+			onDrop={onDrop}
+			onDragOver={onDragOver}
+			fitView
+			fitViewOptions={{
+			  padding: 0.3,
+			}}
+			defaultEdgeOptions={{
+			  type: 'smoothstep',
 
-        <Controls />
+			  animated: true,
 
-        <MiniMap
-          pannable
-          zoomable
-          style={{
-            backgroundColor:
-              '#ffffff',
+			  style: {
+				strokeWidth: 2,
+			  },
+			}}
+		  >
+			<Background />
 
-            border:
-              '1px solid #e5e7eb',
-          }}
-        />
-      </ReactFlow>
-    </div>
-  )
+			<Controls />
+
+			<MiniMap
+			  pannable
+			  zoomable
+			  style={{
+				backgroundColor:
+				  '#ffffff',
+
+				border:
+				  '1px solid #e5e7eb',
+			  }}
+			/>
+		  </ReactFlow>
+		</div>
+	  </div>
+	)
 }

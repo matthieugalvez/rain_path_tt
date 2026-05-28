@@ -37,14 +37,16 @@ export default function WorkflowSidebar() {
         position: 'absolute',
         top: 0,
         right: 0,
+		bottom: 0,
 
         width: 340,
-        height: '100vh',
 
-        background: 'white',
+        background: '#ffffff',
 
         borderLeft:
-          '1px solid #ddd',
+          '1px solid #e5e7eb',
+
+		overflowY: 'auto',
 
         padding: 20,
 
