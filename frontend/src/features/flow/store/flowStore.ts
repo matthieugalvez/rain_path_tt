@@ -203,7 +203,7 @@ export const useWorkflowStore =
 	deleteSelectedElements:
 	  () =>
 		set((state) => {
-		  const deletableNodeIds =
+		  const deletedNodeIds =
 			state.nodes
 			  .filter(
 				(node) =>
@@ -218,11 +218,22 @@ export const useWorkflowStore =
 				  node.id
 			  )
 
+		  const deletedEdgeIds =
+			state.edges
+			  .filter(
+				(edge) =>
+				  edge.selected
+			  )
+			  .map(
+				(edge) =>
+				  edge.id
+			  )
+
 		  return {
 			nodes:
 			  state.nodes.filter(
 				(node) =>
-				  !deletableNodeIds.includes(
+				  !deletedNodeIds.includes(
 					node.id
 				  )
 			  ),
@@ -230,10 +241,13 @@ export const useWorkflowStore =
 			edges:
 			  state.edges.filter(
 				(edge) =>
-				  !deletableNodeIds.includes(
+				  !deletedEdgeIds.includes(
+					edge.id
+				  ) &&
+				  !deletedNodeIds.includes(
 					edge.source
 				  ) &&
-				  !deletableNodeIds.includes(
+				  !deletedNodeIds.includes(
 					edge.target
 				  )
 			  ),

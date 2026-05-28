@@ -1,4 +1,4 @@
-import React from 'react'
+import { React, useEffect } from 'react'
 
 import {
   ReactFlow,
@@ -227,6 +227,26 @@ export default function WorkflowEditor() {
 
     createNode(type, position)
   }
+
+	useEffect(() => {
+	  const handler = (e: KeyboardEvent) => {
+		if (e.key === 'Delete') {
+		  deleteSelectedElements()
+		}
+	  }
+
+	  window.addEventListener(
+		'keydown',
+		handler
+	  )
+
+	  return () => {
+		window.removeEventListener(
+		  'keydown',
+		  handler
+		)
+	  }
+	}, [deleteSelectedElements])
 
   return (
     <div
