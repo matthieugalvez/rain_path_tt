@@ -50,14 +50,13 @@ git clone git@github.com:matthieugalvez/rain_path_tt.git
 cd rain_path
 ```
 
-Install dependencies:
+Launch the project:
 
 ```bash
-make install
+make
 ```
 
-This command installs frontend and backend dependencies.
-The Prisma client is generated automatically during backend installation.
+Install dependencies, then start frontend and backend servers.
 
 ---
 
@@ -281,7 +280,7 @@ Returns all saved workflows.
 
 ---
 
-### Get Workflow By Name
+### Get Workflow By id
 
 #### GET `/workflows/:id`
 
