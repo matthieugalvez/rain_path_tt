@@ -56,11 +56,8 @@ Install dependencies:
 make install
 ```
 
-This command:
-
-* installs frontend dependencies,
-* installs backend dependencies,
-* generates the Prisma client automatically.
+This command installs frontend and backend dependencies.
+The Prisma client is generated automatically during backend installation.
 
 ---
 
@@ -107,7 +104,7 @@ http://localhost:3000
 
 ---
 
-## Run Prisma migrations
+## Sync Prisma Schema
 
 ```bash
 make prisma
@@ -137,12 +134,22 @@ make clean
 make all
 ```
 
-This default rule will run rules `install` then `prisma` then `dev`
+Runs the complete setup sequence:
+- install dependencies,
+- generate Prisma client and synchronize the database schema,
+- start frontend and backend servers.
+
+This is the default rule executed when running:
+```bash
+make
+```
+
+The command blocks while frontend and backend development servers are running.
 
 ## Rebuild
 
 ```bash
-mare re
+make re
 ```
 
 This command will run the `clean` rule and then `all`
@@ -194,7 +201,7 @@ Only one outgoing connection is allowed per branch.
 
 ### Delay Node
 
-Represents time delay before the next action.
+Represents a time delay before the next action.
 
 ---
 
@@ -224,7 +231,7 @@ Simulation features:
 
 The simulation is entirely frontend-based and does not execute real workflows.
 
-The repo also come with an already generated database including a 'test' workflow illustrating the possibilities of the progression mode.
+A pre-generated database containing a sample workflow is included to demonstrate the simulation mode.
 
 ---
 
@@ -238,23 +245,23 @@ http://localhost:3000
 
 ---
 
-# Hello Endpoint
+## Hello Endpoint
 
-### GET `/hello`
+#### GET `/hello`
 
-Return an "Hello World" type string to test backend responsiveness
+Returns a simple response used to test backend availability.
 
-# Workflow Endpoints
+## Workflow Endpoints
 
-## Save Workflow
+### Save Workflow
 
-### POST `/workflows`
+#### POST `/workflows`
 
 Creates or updates a workflow.
 
 If a workflow with the same name already exists, it is overwritten.
 
-### Request Body
+##### Request Body
 
 ```json
 {
@@ -266,17 +273,17 @@ If a workflow with the same name already exists, it is overwritten.
 
 ---
 
-## Get All Workflows
+### Get All Workflows
 
-### GET `/workflows`
+#### GET `/workflows`
 
 Returns all saved workflows.
 
 ---
 
-## Get Workflow By Name
+### Get Workflow By Name
 
-### GET `/workflows/:id`
+#### GET `/workflows/:id`
 
 Returns a specific workflow.
 
@@ -288,11 +295,11 @@ GET /workflows/cmppxbbcf0002nliy39ul0af5
 
 ---
 
-## Delete Workflow
+### Delete Workflow
 
-### DELETE `/workflows/:id`
+#### DELETE `/workflows/:id`
 
-Deletes a workflow by name.
+Deletes a workflow by id.
 
 ---
 
@@ -323,3 +330,15 @@ npx prisma generate
 ---
 
 * Workflow persistence is handled entirely through Prisma.
+
+## Design Choices
+
+The project focuses on simplicity and usability rather than full workflow execution.
+
+Key architectural decisions include:
+
+* frontend-only workflow simulation for fast iteration and visual feedback,
+* SQLite for lightweight local persistence,
+* Zustand for centralized workflow state management,
+* ReactFlow for visual graph editing,
+* contextual validation and node highlighting to improve usability.
