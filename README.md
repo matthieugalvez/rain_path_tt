@@ -131,6 +131,22 @@ make clean
 
 ---
 
+## Default
+
+```bash
+make all
+```
+
+This default rule will run rules `install` then `prisma` then `dev`
+
+## Rebuild
+
+```bash
+mare re
+```
+
+This command will run the `clean` rule and then `all`
+
 # Frontend Usage
 
 ## Workflow Editor
@@ -176,6 +192,10 @@ Allows branching logic with:
 
 Only one outgoing connection is allowed per branch.
 
+### Delay Node
+
+Represents time delay before the next action.
+
 ---
 
 # Workflow Validation Rules
@@ -203,6 +223,8 @@ Simulation features:
 * conditional branching is supported.
 
 The simulation is entirely frontend-based and does not execute real workflows.
+
+The repo also come with an already generated database including a 'test' workflow illustrating the possibilities of the progression mode.
 
 ---
 
