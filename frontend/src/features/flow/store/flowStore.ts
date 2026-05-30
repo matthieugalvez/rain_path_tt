@@ -1,10 +1,6 @@
-import { create } from 'zustand'
+import { create } from "zustand";
 
-import {
-  addEdge,
-  applyNodeChanges,
-  applyEdgeChanges,
-} from '@xyflow/react'
+import { addEdge, applyNodeChanges, applyEdgeChanges } from "@xyflow/react";
 
 import type {
   Node,
@@ -12,421 +8,307 @@ import type {
   Connection,
   NodeChange,
   EdgeChange,
-} from '@xyflow/react'
+} from "@xyflow/react";
 
 interface WorkflowState {
-  nodes: Node[]
-  edges: Edge[]
+  nodes: Node[];
+  edges: Edge[];
 
-  setNodes: (nodes: Node[]) => void
-  setEdges: (edges: Edge[]) => void
+  setNodes: (nodes: Node[]) => void;
+  setEdges: (edges: Edge[]) => void;
 
-  onNodesChange: (
-    changes: NodeChange[]
-  ) => void
+  onNodesChange: (changes: NodeChange[]) => void;
 
-  onEdgesChange: (
-    changes: EdgeChange[]
-  ) => void
+  onEdgesChange: (changes: EdgeChange[]) => void;
 
-  onConnect: (
-    connection: Connection
-  ) => void
+  onConnect: (connection: Connection) => void;
 
-  addNode: (type: string) => void
+  addNode: (type: string) => void;
 
-  selectedNodeId: string | null
+  selectedNodeId: string | null;
 
-  setSelectedNodeId: (
-	  id: string | null
-  ) => void
+  setSelectedNodeId: (id: string | null) => void;
 
-	deleteSelectedElements:
-		() => void
+  deleteSelectedElements: () => void;
 
-  updateNodeData: (
-	  nodeId: string,
-	  data: any
-  ) => void
+  updateNodeData: (nodeId: string, data: any) => void;
 
   createNode: (
-	type: string,
-	position: {
-    	x: number
-    	y: number
-  	}
-  ) => void
+    type: string,
+    position: {
+      x: number;
+      y: number;
+    },
+  ) => void;
 
-	setWorkflow: (
-	  nodes: any[],
-	  edges: any[]
-	) => void
+  setWorkflow: (nodes: any[], edges: any[]) => void;
 
-	currentSimulationNodeId:
-	  | string
-	  | null
+  currentSimulationNodeId: string | null;
 
-	completedSimulationNodeIds:
-	  string[]
+  completedSimulationNodeIds: string[];
 
-	activeSimulationEdgeIds:
-	  string[]
+  activeSimulationEdgeIds: string[];
 }
 
-export const useWorkflowStore =
-  create<WorkflowState>((set) => ({
-	nodes: [
-	  {
-		id: 'start',
+export const useWorkflowStore = create<WorkflowState>((set) => ({
+  nodes: [
+    {
+      id: "start",
 
-		type: 'start',
+      type: "start",
 
-		position: {
-		  x: 100,
-		  y: 200,
-		},
+      position: {
+        x: 100,
+        y: 200,
+      },
 
-		data: {},
-	  },
+      data: {},
+    },
 
-	  {
-		id: 'end',
+    {
+      id: "end",
 
-		type: 'end',
+      type: "end",
 
-		position: {
-		  x: 900,
-		  y: 200,
-		},
+      position: {
+        x: 900,
+        y: 200,
+      },
 
-		data: {},
-	  },
-	],
+      data: {},
+    },
+  ],
 
-	edges: [
-	  {
-		id: 'start-end',
+  edges: [
+    {
+      id: "start-end",
 
-		source: 'start',
+      source: "start",
 
-		target: 'end',
-	  },
-	],
+      target: "end",
+    },
+  ],
 
-    setNodes: (nodes) =>
-      set({
-        nodes,
-      }),
+  setNodes: (nodes) =>
+    set({
+      nodes,
+    }),
 
-    setEdges: (edges) =>
-      set({
-        edges,
-      }),
+  setEdges: (edges) =>
+    set({
+      edges,
+    }),
 
-	onNodesChange: (
-	  changes
-	) =>
-	  set((state) => ({
-		nodes:
-		  applyNodeChanges(
-			changes.filter(
-			  (change) => {
-				if (
-				  change.type !==
-				  'remove'
-				) {
-				  return true
-				}
+  onNodesChange: (changes) =>
+    set((state) => ({
+      nodes: applyNodeChanges(
+        changes.filter((change) => {
+          if (change.type !== "remove") {
+            return true;
+          }
 
-				const node =
-				  state.nodes.find(
-					(n) =>
-					  n.id ===
-					  change.id
-				  )
+          const node = state.nodes.find((n) => n.id === change.id);
 
-				return (
-				  node?.type !==
-					'start' &&
-				  node?.type !==
-					'end'
-				)
-			  }
-			),
+          return node?.type !== "start" && node?.type !== "end";
+        }),
 
-			state.nodes
-		  ),
-	  })),
+        state.nodes,
+      ),
+    })),
 
-    onEdgesChange: (changes) =>
-      set((state) => ({
-        edges: applyEdgeChanges(
-          changes,
-          state.edges
+  onEdgesChange: (changes) =>
+    set((state) => ({
+      edges: applyEdgeChanges(changes, state.edges),
+    })),
+
+  onConnect: (connection) =>
+    set((state) => {
+      const sourceNode = state.nodes.find(
+        (node) => node.id === connection.source,
+      );
+
+      let label = undefined;
+
+      if (sourceNode?.type === "condition") {
+        label = connection.sourceHandle === "yes" ? "YES" : "NO";
+      }
+
+      const filteredEdges = state.edges.filter((edge) => {
+        // condition node:
+        // replace only same handle
+        if (sourceNode?.type === "condition") {
+          return !(
+            edge.source === connection.source &&
+            edge.sourceHandle === connection.sourceHandle
+          );
+        }
+
+        // classic node:
+        // replace all outgoing edges
+        return edge.source !== connection.source;
+      });
+
+      return {
+        edges: addEdge(
+          {
+            ...connection,
+
+            type: "smoothstep",
+
+            label,
+
+            data: {
+              label,
+            },
+          },
+
+          filteredEdges,
         ),
-      })),
+      };
+    }),
 
-	onConnect: (
-	  connection
-	) =>
-	  set((state) => {
-		const sourceNode =
-		  state.nodes.find(
-			(node) =>
-			  node.id ===
-			  connection.source
-		  )
+  addNode: (type) =>
+    set((state) => {
+      const id = crypto.randomUUID();
 
-		let label =
-		  undefined
+      return {
+        nodes: [
+          ...state.nodes,
 
-		if (
-		  sourceNode?.type ===
-		  'condition'
-		) {
-		  label =
-			connection.sourceHandle ===
-			'yes'
-			  ? 'YES'
-			  : 'NO'
-		}
+          {
+            id,
 
-		const filteredEdges =
-		  state.edges.filter(
-			(edge) => {
-			  // condition node:
-			  // replace only same handle
-			  if (
-				sourceNode?.type ===
-				'condition'
-			  ) {
-				return !(
-				  edge.source ===
-					connection.source &&
-				  edge.sourceHandle ===
-					connection.sourceHandle
-				)
-			  }
+            type,
 
-			  // classic node:
-			  // replace all outgoing edges
-			  return (
-				edge.source !==
-				connection.source
-			  )
-			}
-		  )
+            position: {
+              x: Math.random() * 500,
+              y: Math.random() * 500,
+            },
 
-		return {
-		  edges: addEdge(
-			{
-			  ...connection,
+            data: getDefaultNodeData(type),
+          },
+        ],
+      };
+    }),
 
-			  type:
-				'smoothstep',
+  selectedNodeId: null,
 
-			  label,
+  deleteSelectedElements: () =>
+    set((state) => {
+      const deletedNodeIds = state.nodes
+        .filter(
+          (node) =>
+            node.selected && node.type !== "start" && node.type !== "end",
+        )
+        .map((node) => node.id);
 
-			  data: {
-				label,
-			  },
-			},
+      const deletedEdgeIds = state.edges
+        .filter((edge) => edge.selected)
+        .map((edge) => edge.id);
 
-			filteredEdges
-		  ),
-		}
-	  }),
+      return {
+        nodes: state.nodes.filter((node) => !deletedNodeIds.includes(node.id)),
 
-    addNode: (type) =>
-      set((state) => {
-        const id = crypto.randomUUID()
+        edges: state.edges.filter(
+          (edge) =>
+            !deletedEdgeIds.includes(edge.id) &&
+            !deletedNodeIds.includes(edge.source) &&
+            !deletedNodeIds.includes(edge.target),
+        ),
+      };
+    }),
+
+  currentSimulationNodeId: null,
+
+  completedSimulationNodeIds: [],
+
+  activeSimulationEdgeIds: [],
+  setSelectedNodeId: (id) =>
+    set({
+      selectedNodeId: id,
+    }),
+
+  updateNodeData: (nodeId, newData) =>
+    set((state) => ({
+      nodes: state.nodes.map((node) => {
+        if (node.id !== nodeId) {
+          return node;
+        }
 
         return {
-          nodes: [
-            ...state.nodes,
+          ...node,
 
-            {
-              id,
-
-              type,
-
-              position: {
-                x: Math.random() * 500,
-                y: Math.random() * 500,
-              },
-
-              data: getDefaultNodeData(type),
-            },
-          ],
-        }
+          data: {
+            ...node.data,
+            ...newData,
+          },
+        };
       }),
+    })),
 
-	selectedNodeId: null,
+  createNode: (type, position) =>
+    set((state) => {
+      const id = crypto.randomUUID();
 
-	deleteSelectedElements:
-	  () =>
-		set((state) => {
-		  const deletedNodeIds =
-			state.nodes
-			  .filter(
-				(node) =>
-				  node.selected &&
-				  node.type !==
-					'start' &&
-				  node.type !==
-					'end'
-			  )
-			  .map(
-				(node) =>
-				  node.id
-			  )
+      return {
+        nodes: [
+          ...state.nodes,
 
-		  const deletedEdgeIds =
-			state.edges
-			  .filter(
-				(edge) =>
-				  edge.selected
-			  )
-			  .map(
-				(edge) =>
-				  edge.id
-			  )
+          {
+            id,
 
-		  return {
-			nodes:
-			  state.nodes.filter(
-				(node) =>
-				  !deletedNodeIds.includes(
-					node.id
-				  )
-			  ),
+            type,
 
-			edges:
-			  state.edges.filter(
-				(edge) =>
-				  !deletedEdgeIds.includes(
-					edge.id
-				  ) &&
-				  !deletedNodeIds.includes(
-					edge.source
-				  ) &&
-				  !deletedNodeIds.includes(
-					edge.target
-				  )
-			  ),
-		  }
-		}),
+            position,
 
-	currentSimulationNodeId:
-	  null,
+            data: getDefaultNodeData(type),
+          },
+        ],
+      };
+    }),
 
-	completedSimulationNodeIds:
-	  [],
+  setWorkflow: (nodes, edges) =>
+    set({
+      nodes,
+      edges,
+    }),
 
-	activeSimulationEdgeIds:
-	  [],
-		setSelectedNodeId: (id) =>
-			set({
-				selectedNodeId: id,
-			}),
+  setSimulationState: (
+    currentNodeId,
 
-	updateNodeData: (
-		nodeId,
-		newData
-	) =>
-		set((state) => ({
-			nodes: state.nodes.map((node) => {
-				if (node.id !== nodeId) {
-					return node
-				}
+    completedNodeIds,
 
-				return {
-					...node,
+    activeEdgeIds,
+  ) =>
+    set({
+      currentSimulationNodeId: currentNodeId,
 
-					data: {
-						...node.data,
-						...newData,
-					},
-				}
-			}),
-		})),
+      completedSimulationNodeIds: completedNodeIds,
 
-		createNode: (
-  			type,
-  			position
-		) =>
-  			set((state) => {
-    		const id =
-      			crypto.randomUUID()
-
-    		return {
-			  nodes: [
-				...state.nodes,
-
-				{
-				  id,
-
-				  type,
-
-				  position,
-
-				  data:
-					getDefaultNodeData(
-					  type
-					),
-				},
-			  ],
-			}
-		  }),
-
-	setWorkflow: (
-	  nodes,
-	  edges
-	) =>
-	  set({
-		nodes,
-		edges,
-	  }),
-
-	setSimulationState: (
-	  currentNodeId,
-
-	  completedNodeIds,
-
-	  activeEdgeIds
-	) =>
-	  set({
-		currentSimulationNodeId:
-		  currentNodeId,
-
-		completedSimulationNodeIds:
-		  completedNodeIds,
-
-		activeSimulationEdgeIds:
-		  activeEdgeIds,
-	  }),
-  }))
+      activeSimulationEdgeIds: activeEdgeIds,
+    }),
+}));
 
 function getDefaultNodeData(type: string) {
   switch (type) {
-    case 'delay':
+    case "delay":
       return {
         days: 7,
-      }
+      };
 
-    case 'condition':
+    case "condition":
       return {
-        conditionType: 'email_known',
-		activeBranch: 'YES',
-      }
+        conditionType: "email_known",
+        activeBranch: "YES",
+      };
 
-    case 'email':
+    case "email":
       return {
-        subject: 'Sujet',
-        body: 'Contenu',
-      }
+        subject: "Sujet",
+        body: "Contenu",
+      };
 
     default:
-      return {}
+      return {};
   }
 }

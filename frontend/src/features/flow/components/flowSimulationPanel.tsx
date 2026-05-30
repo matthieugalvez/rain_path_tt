@@ -1,148 +1,81 @@
-import {
-  useMemo,
-  useState,
-} from 'react'
+import { useMemo, useState } from "react";
 
-import { useWorkflowStore }
-from '../store/flowStore'
+import { useWorkflowStore } from "../store/flowStore";
 
 export default function WorkflowSimulationPanel() {
-  const nodes =
-    useWorkflowStore(
-      (state) => state.nodes
-    )
+  const nodes = useWorkflowStore((state) => state.nodes);
 
-  const edges =
-    useWorkflowStore(
-      (state) => state.edges
-    )
+  const edges = useWorkflowStore((state) => state.edges);
 
-  const setSimulationState =
-    useWorkflowStore(
-      (state) =>
-        state.setSimulationState
-    )
+  const setSimulationState = useWorkflowStore(
+    (state) => state.setSimulationState,
+  );
 
-  const orderedNodes =
-    useMemo(() => {
-      const start =
-        nodes.find(
-          (node) =>
-            node.type ===
-            'start'
-        )
+  const orderedNodes = useMemo(() => {
+    const start = nodes.find((node) => node.type === "start");
 
-      if (!start) {
-        return []
-      }
-
-      const result = []
-
-      let current = start
-
-      const visited =
-        new Set<string>()
-
-      while (
-        current &&
-        !visited.has(
-          current.id
-        )
-      ) {
-        visited.add(current.id)
-
-        result.push(current)
-
-        let edge
-
-        if (
-          current.type ===
-          'condition'
-        ) {
-          edge = edges.find(
-            (edge) =>
-              edge.source ===
-                current.id &&
-              edge.data
-                ?.label ===
-                current.data
-                  ?.activeBranch
-          )
-        } else {
-          edge = edges.find(
-            (edge) =>
-              edge.source ===
-              current.id
-          )
-        }
-
-        if (!edge) {
-          break
-        }
-
-        current =
-          nodes.find(
-            (node) =>
-              node.id ===
-              edge.target
-          )
-      }
-
-      return result
-    }, [nodes, edges])
-
-  const [index, setIndex] =
-    useState(0)
-
-  function simulate() {
-    const current =
-      orderedNodes[index]
-
-    if (!current) {
-      return
+    if (!start) {
+      return [];
     }
 
-    const completed =
-      orderedNodes
-        .slice(0, index)
-        .map(
-          (node) =>
-            node.id
+    const result = [];
+
+    let current = start;
+
+    const visited = new Set<string>();
+
+    while (current && !visited.has(current.id)) {
+      visited.add(current.id);
+
+      result.push(current);
+
+      let edge;
+
+      if (current.type === "condition") {
+        edge = edges.find(
+          (edge) =>
+            edge.source === current.id &&
+            edge.data?.label === current.data?.activeBranch,
+        );
+      } else {
+        edge = edges.find((edge) => edge.source === current.id);
+      }
+
+      if (!edge) {
+        break;
+      }
+
+      current = nodes.find((node) => node.id === edge.target);
+    }
+
+    return result;
+  }, [nodes, edges]);
+
+  const [index, setIndex] = useState(0);
+
+  function simulate() {
+    const current = orderedNodes[index];
+
+    if (!current) {
+      return;
+    }
+
+    const completed = orderedNodes.slice(0, index).map((node) => node.id);
+
+    let activeEdges = [];
+
+    if (current.type === "condition") {
+      activeEdges = edges
+        .filter(
+          (edge) =>
+            edge.source === current.id &&
+            edge.data?.label === current.data?.activeBranch,
         )
-
-    let activeEdges = []
-
-    if (
-      current.type ===
-      'condition'
-    ) {
-      activeEdges =
-        edges
-          .filter(
-            (edge) =>
-              edge.source ===
-                current.id &&
-              edge.data
-                ?.label ===
-                current.data
-                  ?.activeBranch
-          )
-          .map(
-            (edge) =>
-              edge.id
-          )
+        .map((edge) => edge.id);
     } else {
-      activeEdges =
-        edges
-          .filter(
-            (edge) =>
-              edge.source ===
-              current.id
-          )
-          .map(
-            (edge) =>
-              edge.id
-          )
+      activeEdges = edges
+        .filter((edge) => edge.source === current.id)
+        .map((edge) => edge.id);
     }
 
     setSimulationState(
@@ -150,40 +83,31 @@ export default function WorkflowSimulationPanel() {
 
       completed,
 
-      activeEdges
-    )
+      activeEdges,
+    );
 
-    if (
-      index <
-      orderedNodes.length - 1
-    ) {
-      setIndex(index + 1)
+    if (index < orderedNodes.length - 1) {
+      setIndex(index + 1);
     }
   }
 
   function reset() {
-    setIndex(0)
+    setIndex(0);
 
-    setSimulationState(
-      null,
-      [],
-      []
-    )
+    setSimulationState(null, [], []);
   }
 
   return (
     <div
       style={{
-        position: 'absolute',
+        position: "absolute",
 
         bottom: 20,
         left: 280,
 
-        background:
-          '#ffffff',
+        background: "#ffffff",
 
-        border:
-          '1px solid #e5e7eb',
+        border: "1px solid #e5e7eb",
 
         borderRadius: 12,
 
@@ -191,22 +115,14 @@ export default function WorkflowSimulationPanel() {
 
         zIndex: 50,
 
-        display: 'flex',
+        display: "flex",
 
         gap: 10,
       }}
     >
-      <button
-        onClick={simulate}
-      >
-        Next Step
-      </button>
+      <button onClick={simulate}>Next Step</button>
 
-      <button
-        onClick={reset}
-      >
-        Reset
-      </button>
+      <button onClick={reset}>Reset</button>
     </div>
-  )
+  );
 }

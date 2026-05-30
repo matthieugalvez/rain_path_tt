@@ -1,44 +1,28 @@
-import { useWorkflowStore } from '../../store/flowStore'
+import { useWorkflowStore } from "../../store/flowStore";
 
-export default function ConditionEditor({
-  node,
-}: any) {
-  const updateNodeData =
-    useWorkflowStore(
-      (state) =>
-        state.updateNodeData
-    )
+export default function ConditionEditor({ node }: any) {
+  const updateNodeData = useWorkflowStore((state) => state.updateNodeData);
 
   return (
     <div
       style={{
-        display: 'flex',
-        flexDirection: 'column',
+        display: "flex",
+        flexDirection: "column",
         gap: 20,
       }}
     >
       <div>
-        <label>
-          Condition
-        </label>
+        <label>Condition</label>
 
         <select
-          value={
-            node.data
-              ?.conditionType ??
-            'email_known'
-          }
+          value={node.data?.conditionType ?? "email_known"}
           onChange={(e) => {
-            updateNodeData(
-              node.id,
-              {
-                conditionType:
-                  e.target.value,
-              }
-            )
+            updateNodeData(node.id, {
+              conditionType: e.target.value,
+            });
           }}
           style={{
-            width: '100%',
+            width: "100%",
 
             marginTop: 8,
 
@@ -46,46 +30,29 @@ export default function ConditionEditor({
 
             borderRadius: 8,
 
-            border:
-              '1px solid #d1d5db',
+            border: "1px solid #d1d5db",
           }}
         >
-          <option value="email_known">
-            Email connu
-          </option>
+          <option value="email_known">Email connu</option>
 
-          <option value="has_whatsapp">
-            WhatsApp disponible
-          </option>
+          <option value="has_whatsapp">WhatsApp disponible</option>
 
-          <option value="email_rejected">
-            Email rejeté
-          </option>
+          <option value="email_rejected">Email rejeté</option>
         </select>
       </div>
 
       <div>
-        <label>
-          Branche active
-        </label>
+        <label>Branche active</label>
 
         <select
-          value={
-            node.data
-              ?.activeBranch ??
-            'YES'
-          }
+          value={node.data?.activeBranch ?? "YES"}
           onChange={(e) => {
-            updateNodeData(
-              node.id,
-              {
-                activeBranch:
-                  e.target.value,
-              }
-            )
+            updateNodeData(node.id, {
+              activeBranch: e.target.value,
+            });
           }}
           style={{
-            width: '100%',
+            width: "100%",
 
             marginTop: 8,
 
@@ -93,19 +60,14 @@ export default function ConditionEditor({
 
             borderRadius: 8,
 
-            border:
-              '1px solid #d1d5db',
+            border: "1px solid #d1d5db",
           }}
         >
-          <option value="YES">
-            YES
-          </option>
+          <option value="YES">YES</option>
 
-          <option value="NO">
-            NO
-          </option>
+          <option value="NO">NO</option>
         </select>
       </div>
     </div>
-  )
+  );
 }

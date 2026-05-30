@@ -1,20 +1,14 @@
-import {
-  Handle,
-  Position,
-} from '@xyflow/react'
+import { Handle, Position } from "@xyflow/react";
 
-import BaseNode from './BaseNode'
+import BaseNode from "./BaseNode";
 
-import { conditionLabels } from '../../constants/conditionLabels'
+import { conditionLabels } from "../../constants/conditionLabels";
 
-export default function ConditionNode({
-  data,
-  selected,
-}: any) {
+export default function ConditionNode({ data, selected }: any) {
   return (
     <div
       style={{
-        position: 'relative',
+        position: "relative",
       }}
     >
       <Handle
@@ -23,7 +17,7 @@ export default function ConditionNode({
         style={{
           width: 12,
           height: 12,
-          background: '#2563eb',
+          background: "#2563eb",
         }}
       />
 
@@ -31,25 +25,19 @@ export default function ConditionNode({
         title="❓ Condition"
         background="#ffedd5"
         selected={selected}
-		invalid={data.invalid}
-		simulationStatus={
-    		data.simulationStatus
-		}
+        invalid={data.invalid}
+        simulationStatus={data.simulationStatus}
       >
-        {
-          conditionLabels[
-            data.conditionType
-          ]
-        }
+        {conditionLabels[data.conditionType]}
       </BaseNode>
 
       <div
         style={{
-          position: 'absolute',
+          position: "absolute",
           right: -40,
-          top: '30%',
+          top: "30%",
           fontSize: 12,
-          fontWeight: 'bold',
+          fontWeight: "bold",
         }}
       >
         YES
@@ -60,20 +48,20 @@ export default function ConditionNode({
         position={Position.Right}
         id="yes"
         style={{
-          top: '35%',
+          top: "35%",
           width: 12,
           height: 12,
-          background: '#16a34a',
+          background: "#16a34a",
         }}
       />
 
       <div
         style={{
-          position: 'absolute',
+          position: "absolute",
           right: -35,
-          top: '65%',
+          top: "65%",
           fontSize: 12,
-          fontWeight: 'bold',
+          fontWeight: "bold",
         }}
       >
         NO
@@ -84,12 +72,12 @@ export default function ConditionNode({
         position={Position.Right}
         id="no"
         style={{
-          top: '70%',
+          top: "70%",
           width: 12,
           height: 12,
-          background: '#dc2626',
+          background: "#dc2626",
         }}
       />
     </div>
-  )
+  );
 }

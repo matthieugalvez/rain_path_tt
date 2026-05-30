@@ -1,18 +1,12 @@
-import {
-  Handle,
-  Position,
-} from '@xyflow/react'
+import { Handle, Position } from "@xyflow/react";
 
-import BaseNode from './BaseNode'
+import BaseNode from "./BaseNode";
 
-export default function SmsNode({
-	data,
-  selected,
-}: any) {
+export default function SmsNode({ data, selected }: any) {
   return (
     <div
       style={{
-        position: 'relative',
+        position: "relative",
       }}
     >
       <Handle
@@ -21,7 +15,7 @@ export default function SmsNode({
         style={{
           width: 12,
           height: 12,
-          background: '#2563eb',
+          background: "#2563eb",
         }}
       />
 
@@ -29,10 +23,8 @@ export default function SmsNode({
         title="📱 SMS"
         background="#e0f2fe"
         selected={selected}
-		invalid={data.invalid}
-		simulationStatus={
-    		data.simulationStatus
-		}
+        invalid={data.invalid}
+        simulationStatus={data.simulationStatus}
       >
         Envoi SMS
       </BaseNode>
@@ -43,9 +35,9 @@ export default function SmsNode({
         style={{
           width: 12,
           height: 12,
-          background: '#2563eb',
+          background: "#2563eb",
         }}
       />
     </div>
-  )
+  );
 }

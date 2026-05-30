@@ -1,57 +1,39 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Post,
-  Delete,
-} from '@nestjs/common'
+import { Body, Controller, Get, Param, Post, Delete } from '@nestjs/common';
 
-import { WorkflowsService }
-from './workflow.service'
+import { WorkflowsService } from './workflow.service';
 
-import { CreateWorkflowDto }
-from './dto/create-workflow.dto'
+import { CreateWorkflowDto } from './dto/create-workflow.dto';
 
 @Controller('workflows')
 export class WorkflowsController {
-  constructor(
-    private readonly workflowsService:
-      WorkflowsService
-  ) {}
+  constructor(private readonly workflowsService: WorkflowsService) {}
 
   @Post()
   create(
     @Body()
-    dto: CreateWorkflowDto
+    dto: CreateWorkflowDto,
   ) {
-    return this.workflowsService.save(
-      dto
-    )
+    return this.workflowsService.save(dto);
   }
 
-	@Delete(':id')
-	remove(
-	  @Param('id')
-	  id: string
-	) {
-	  return this.workflowsService.remove(
-		id
-	  )
-	}
+  @Delete(':id')
+  remove(
+    @Param('id')
+    id: string,
+  ) {
+    return this.workflowsService.remove(id);
+  }
 
   @Get()
   findAll() {
-    return this.workflowsService.findAll()
+    return this.workflowsService.findAll();
   }
 
   @Get(':id')
   findOne(
     @Param('id')
-    id: string
+    id: string,
   ) {
-    return this.workflowsService.findOne(
-      id
-    )
+    return this.workflowsService.findOne(id);
   }
 }

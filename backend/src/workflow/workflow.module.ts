@@ -6,9 +6,7 @@ import { PrismaModule } from '../prisma/prisma.module';
 @Module({
   imports: [PrismaModule],
 
-  controllers: [
-    WorkflowsController,
-  ],
+  controllers: [WorkflowsController],
 
   providers: [WorkflowsService],
 })

@@ -1,31 +1,30 @@
 export type WorkflowNodeType =
-  | 'start'
-  | 'delay'
-  | 'condition'
-  | 'email'
-  | 'sms'
-  | 'whatsapp'
-  | 'postal'
-  | 'end'
+  | "start"
+  | "delay"
+  | "condition"
+  | "email"
+  | "sms"
+  | "whatsapp"
+  | "postal"
+  | "end";
 
 export interface BaseNodeData {
-  label: string
+  label: string;
 }
 
 export interface DelayNodeData extends BaseNodeData {
-  days: number
+  days: number;
 }
 
 export interface EmailNodeData extends BaseNodeData {
-  subject: string
-  body: string
+  subject: string;
+  body: string;
 }
 
-export interface ConditionNodeData
-  extends BaseNodeData {
+export interface ConditionNodeData extends BaseNodeData {
   conditionType:
-    | 'email_known'
-    | 'has_whatsapp'
-    | 'email_rejected'
-    | 'email_opened'
+    | "email_known"
+    | "has_whatsapp"
+    | "email_rejected"
+    | "email_opened";
 }

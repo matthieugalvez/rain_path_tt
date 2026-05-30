@@ -1,11 +1,11 @@
-import StartNode from './StartNode'
-import DelayNode from './DelayNode'
-import ConditionNode from './ConditionNode'
-import EmailNode from './EmailNode'
-import SmsNode from './SmsNode'
-import WhatsappNode from './WhatsappNode'
-import PostalNode from './PostalNode'
-import EndNode from './EndNode'
+import StartNode from "./StartNode";
+import DelayNode from "./DelayNode";
+import ConditionNode from "./ConditionNode";
+import EmailNode from "./EmailNode";
+import SmsNode from "./SmsNode";
+import WhatsappNode from "./WhatsappNode";
+import PostalNode from "./PostalNode";
+import EndNode from "./EndNode";
 
 export const nodeTypes = {
   start: StartNode,
@@ -16,4 +16,4 @@ export const nodeTypes = {
   whatsapp: WhatsappNode,
   postal: PostalNode,
   end: EndNode,
-}
+};

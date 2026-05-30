@@ -1,10 +1,10 @@
-import { createBrowserRouter } from 'react-router-dom'
+import { createBrowserRouter } from "react-router-dom";
 
-import EditorPage from '../pages/EditorPage'
+import EditorPage from "../pages/EditorPage";
 
 export const router = createBrowserRouter([
   {
-    path: '/',
+    path: "/",
     element: <EditorPage />,
   },
-])
+]);

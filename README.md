@@ -6,11 +6,11 @@ This is a visual workflow builder designed to create and simulate patient commun
 
 The project includes:
 
-* a React + ReactFlow frontend editor,
-* a NestJS backend API,
-* Prisma + SQLite persistence,
-* workflow validation,
-* visual workflow simulation.
+- a React + ReactFlow frontend editor,
+- a NestJS backend API,
+- Prisma + SQLite persistence,
+- workflow validation,
+- visual workflow simulation.
 
 ---
 
@@ -18,16 +18,16 @@ The project includes:
 
 ## Frontend
 
-* React
-* TypeScript
-* ReactFlow (`@xyflow/react`)
-* Zustand
+- React
+- TypeScript
+- ReactFlow (`@xyflow/react`)
+- Zustand
 
 ## Backend
 
-* NestJS
-* Prisma
-* SQLite
+- NestJS
+- Prisma
+- SQLite
 
 ---
 
@@ -35,9 +35,9 @@ The project includes:
 
 ## Requirements
 
-* Node.js >= 20
-* npm
-* make
+- Node.js >= 20
+- npm
+- make
 
 ---
 
@@ -70,8 +70,8 @@ make dev
 
 Starts:
 
-* frontend Vite server,
-* backend NestJS server.
+- frontend Vite server,
+- backend NestJS server.
 
 ---
 
@@ -134,11 +134,13 @@ make all
 ```
 
 Runs the complete setup sequence:
+
 - install dependencies,
 - generate Prisma client and synchronize the database schema,
 - start frontend and backend servers.
 
 This is the default rule executed when running:
+
 ```bash
 make
 ```
@@ -159,10 +161,10 @@ This command will run the `clean` rule and then `all`
 
 The editor allows users to:
 
-* create workflow nodes,
-* connect nodes visually,
-* validate workflow structure,
-* simulate patient progression.
+- create workflow nodes,
+- connect nodes visually,
+- validate workflow structure,
+- simulate patient progression.
 
 ---
 
@@ -170,31 +172,31 @@ The editor allows users to:
 
 ### Start Node
 
-* unique,
-* automatically created,
-* cannot be deleted.
+- unique,
+- automatically created,
+- cannot be deleted.
 
 ### End Node
 
-* unique,
-* automatically created,
-* cannot be deleted.
+- unique,
+- automatically created,
+- cannot be deleted.
 
 ### Message Nodes
 
 Represents communication actions:
 
-* email,
-* SMS,
-* WhatsApp,
-* etc.
+- email,
+- SMS,
+- WhatsApp,
+- etc.
 
 ### Condition Nodes
 
 Allows branching logic with:
 
-* YES branch,
-* NO branch.
+- YES branch,
+- NO branch.
 
 Only one outgoing connection is allowed per branch.
 
@@ -208,10 +210,10 @@ Represents a time delay before the next action.
 
 The editor validates:
 
-* all handles must be connected,
-* all branches must end with an End node,
-* invalid nodes are highlighted in red,
-* condition nodes must contain valid branches.
+- all handles must be connected,
+- all branches must end with an End node,
+- invalid nodes are highlighted in red,
+- condition nodes must contain valid branches.
 
 Validation errors are contextual and only displayed for the selected node.
 
@@ -223,10 +225,10 @@ The application includes a simulated patient progression mode.
 
 Simulation features:
 
-* completed nodes are greyed out,
-* current node is highlighted,
-* next active edge is highlighted,
-* conditional branching is supported.
+- completed nodes are greyed out,
+- current node is highlighted,
+- next active edge is highlighted,
+- conditional branching is supported.
 
 The simulation is entirely frontend-based and does not execute real workflows.
 
@@ -306,8 +308,8 @@ Deletes a workflow by id.
 
 The backend uses:
 
-* Prisma ORM,
-* SQLite database.
+- Prisma ORM,
+- SQLite database.
 
 Database file:
 
@@ -328,7 +330,7 @@ npx prisma generate
 
 ---
 
-* Workflow persistence is handled entirely through Prisma.
+- Workflow persistence is handled entirely through Prisma.
 
 ## Design Choices
 
@@ -336,8 +338,8 @@ The project focuses on simplicity and usability rather than full workflow execut
 
 Key architectural decisions include:
 
-* frontend-only workflow simulation for fast iteration and visual feedback,
-* SQLite for lightweight local persistence,
-* Zustand for centralized workflow state management,
-* ReactFlow for visual graph editing,
-* contextual validation and node highlighting to improve usability.
+- frontend-only workflow simulation for fast iteration and visual feedback,
+- SQLite for lightweight local persistence,
+- Zustand for centralized workflow state management,
+- ReactFlow for visual graph editing,
+- contextual validation and node highlighting to improve usability.

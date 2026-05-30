@@ -1,61 +1,38 @@
-import {
-  useEffect,
-  useState,
-} from 'react'
+import { useEffect, useState } from "react";
 
 import {
   getWorkflow,
   getWorkflows,
   saveWorkflow,
   deleteWorkflow,
-} from '../../../api/workflowApi'
+} from "../../../api/workflowApi";
 
-import { useWorkflowStore }
-from '../store/flowStore'
+import { useWorkflowStore } from "../store/flowStore";
 
 export default function WorkflowTopbar() {
-  const nodes =
-    useWorkflowStore(
-      (state) => state.nodes
-    )
+  const nodes = useWorkflowStore((state) => state.nodes);
 
-  const edges =
-    useWorkflowStore(
-      (state) => state.edges
-    )
+  const edges = useWorkflowStore((state) => state.edges);
 
-  const setWorkflow =
-    useWorkflowStore(
-      (state) =>
-        state.setWorkflow
-    )
+  const setWorkflow = useWorkflowStore((state) => state.setWorkflow);
 
-  const [
-    workflowName,
-    setWorkflowName,
-  ] = useState(
-    'Nouveau workflow'
-  )
+  const [workflowName, setWorkflowName] = useState("Nouveau workflow");
 
-  const [
-    workflows,
-    setWorkflows,
-  ] = useState<any[]>([])
+  const [workflows, setWorkflows] = useState<any[]>([]);
 
   async function refreshWorkflows() {
     try {
-      const data =
-        await getWorkflows()
+      const data = await getWorkflows();
 
-      setWorkflows(data)
+      setWorkflows(data);
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
   }
 
   useEffect(() => {
-    refreshWorkflows()
-  }, [])
+    refreshWorkflows();
+  }, []);
 
   async function handleSave() {
     try {
@@ -65,98 +42,76 @@ export default function WorkflowTopbar() {
         nodes,
 
         edges,
-      })
+      });
 
-      await refreshWorkflows()
+      await refreshWorkflows();
 
-      alert(
-        'Workflow sauvegardé'
-      )
+      alert("Workflow sauvegardé");
     } catch (error) {
-      console.error(error)
+      console.error(error);
 
-      alert(
-        'Erreur sauvegarde'
-      )
+      alert("Erreur sauvegarde");
     }
   }
 
-  async function handleLoad(
-    id: string
-  ) {
+  async function handleLoad(id: string) {
     if (!id) {
-      return
+      return;
     }
 
     try {
-      const workflow =
-        await getWorkflow(id)
+      const workflow = await getWorkflow(id);
 
-      setWorkflow(
-        workflow.nodes,
-        workflow.edges
-      )
+      setWorkflow(workflow.nodes, workflow.edges);
 
-      setWorkflowName(
-        workflow.name
-      )
+      setWorkflowName(workflow.name);
     } catch (error) {
-      console.error(error)
+      console.error(error);
 
-      alert(
-        'Erreur chargement'
-      )
+      alert("Erreur chargement");
     }
   }
 
   return (
     <div
       style={{
-		width: '100%',
+        width: "100%",
         height: 70,
-		flexShrink: 0,
+        flexShrink: 0,
 
-        background: '#ffffff',
+        background: "#ffffff",
 
-        borderBottom:
-          '1px solid #e5e7eb',
+        borderBottom: "1px solid #e5e7eb",
 
-        display: 'flex',
+        display: "flex",
 
-        alignItems: 'center',
+        alignItems: "center",
 
-        justifyContent:
-          'space-between',
+        justifyContent: "space-between",
 
-        padding: '0 20px',
+        padding: "0 20px",
 
-		boxSizing: 'border-box',
+        boxSizing: "border-box",
 
         zIndex: 50,
       }}
     >
       <div
         style={{
-          display: 'flex',
-          alignItems: 'center',
+          display: "flex",
+          alignItems: "center",
           gap: 12,
         }}
       >
         <input
           value={workflowName}
-          onChange={(e) =>
-            setWorkflowName(
-              e.target.value
-            )
-          }
+          onChange={(e) => setWorkflowName(e.target.value)}
           style={{
             width: 260,
 
-            padding:
-              '10px 14px',
+            padding: "10px 14px",
 
-            border:
-              '1px solid #d1d5db',
+            border: "1px solid #d1d5db",
 
             borderRadius: 10,
 
@@ -167,19 +122,17 @@ export default function WorkflowTopbar() {
         <button
           onClick={handleSave}
           style={{
-            padding:
-              '10px 16px',
+            padding: "10px 16px",
 
             borderRadius: 10,
 
-            border: 'none',
+            border: "none",
 
-            background:
-              '#2563eb',
+            background: "#2563eb",
 
-            color: 'white',
+            color: "white",
 
-            cursor: 'pointer',
+            cursor: "pointer",
 
             fontWeight: 600,
           }}
@@ -190,105 +143,76 @@ export default function WorkflowTopbar() {
 
       <div
         style={{
-          display: 'flex',
-          alignItems: 'center',
+          display: "flex",
+          alignItems: "center",
           gap: 10,
         }}
       >
-        <span>
-          Workflows
-        </span>
+        <span>Workflows</span>
 
         <select
-          onChange={(e) =>
-            handleLoad(
-              e.target.value
-            )
-          }
+          onChange={(e) => handleLoad(e.target.value)}
           style={{
-            padding:
-              '10px 12px',
+            padding: "10px 12px",
 
             borderRadius: 10,
 
-            border:
-              '1px solid #d1d5db',
+            border: "1px solid #d1d5db",
           }}
         >
-          <option value="">
-            Charger...
-          </option>
+          <option value="">Charger...</option>
 
-          {workflows.map(
-            (workflow) => (
-              <option
-                key={workflow.id}
-                value={
-                  workflow.id
-                }
-              >
-                {workflow.name}
-              </option>
-            )
-          )}
+          {workflows.map((workflow) => (
+            <option key={workflow.id} value={workflow.id}>
+              {workflow.name}
+            </option>
+          ))}
         </select>
-			<button
-			  onClick={async () => {
-				const selected =
-				  workflows.find(
-					(workflow) =>
-					  workflow.name ===
-					  workflowName
-				  )
+        <button
+          onClick={async () => {
+            const selected = workflows.find(
+              (workflow) => workflow.name === workflowName,
+            );
 
-				if (!selected) {
-				  return
-				}
+            if (!selected) {
+              return;
+            }
 
-				const confirmed =
-				  confirm(
-					`Supprimer "${workflowName}" ?`
-				  )
+            const confirmed = confirm(`Supprimer "${workflowName}" ?`);
 
-				if (!confirmed) {
-				  return
-				}
+            if (!confirmed) {
+              return;
+            }
 
-				try {
-				  await deleteWorkflow(
-					selected.id
-				  )
+            try {
+              await deleteWorkflow(selected.id);
 
-				  await refreshWorkflows()
+              await refreshWorkflows();
 
-				  alert(
-					'Workflow supprimé'
-				  )
-				} catch (error) {
-				  console.error(error)
+              alert("Workflow supprimé");
+            } catch (error) {
+              console.error(error);
 
-				  alert(
-					'Erreur suppression'
-				  )
-				}
-			  }}
-			  style={{
-				padding: '10px 14px',
+              alert("Erreur suppression");
+            }
+          }}
+          style={{
+            padding: "10px 14px",
 
-				borderRadius: 10,
+            borderRadius: 10,
 
-				border: 'none',
+            border: "none",
 
-				background: '#dc2626',
+            background: "#dc2626",
 
-				color: 'white',
+            color: "white",
 
-				cursor: 'pointer',
-			  }}
-			>
-			  Delete
-			</button>
+            cursor: "pointer",
+          }}
+        >
+          Delete
+        </button>
       </div>
     </div>
-  )
+  );
 }

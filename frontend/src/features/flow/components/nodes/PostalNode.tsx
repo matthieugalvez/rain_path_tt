@@ -1,18 +1,12 @@
-import {
-  Handle,
-  Position,
-} from '@xyflow/react'
+import { Handle, Position } from "@xyflow/react";
 
-import BaseNode from './BaseNode'
+import BaseNode from "./BaseNode";
 
-export default function PostalNode({
-	data,
-  selected,
-}: any) {
+export default function PostalNode({ data, selected }: any) {
   return (
     <div
       style={{
-        position: 'relative',
+        position: "relative",
       }}
     >
       <Handle
@@ -21,7 +15,7 @@ export default function PostalNode({
         style={{
           width: 12,
           height: 12,
-          background: '#92400e',
+          background: "#92400e",
         }}
       />
 
@@ -29,10 +23,8 @@ export default function PostalNode({
         title="📮 Courrier"
         background="#fef3c7"
         selected={selected}
-		invalid={data.invalid}
-		simulationStatus={
-    		data.simulationStatus
-		}
+        invalid={data.invalid}
+        simulationStatus={data.simulationStatus}
       >
         Courrier postal
       </BaseNode>
@@ -43,9 +35,9 @@ export default function PostalNode({
         style={{
           width: 12,
           height: 12,
-          background: '#92400e',
+          background: "#92400e",
         }}
       />
     </div>
-  )
+  );
 }

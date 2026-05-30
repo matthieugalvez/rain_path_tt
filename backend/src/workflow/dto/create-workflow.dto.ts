@@ -1,7 +1,7 @@
 export class CreateWorkflowDto {
-  name: string
+  name: string;
 
-  nodes: any[]
+  nodes: any[];
 
-  edges: any[]
+  edges: any[];
 }

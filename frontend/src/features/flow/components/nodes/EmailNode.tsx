@@ -1,18 +1,12 @@
-import {
-  Handle,
-  Position,
-} from '@xyflow/react'
+import { Handle, Position } from "@xyflow/react";
 
-import BaseNode from './BaseNode'
+import BaseNode from "./BaseNode";
 
-export default function EmailNode({
-  data,
-  selected,
-}: any) {
+export default function EmailNode({ data, selected }: any) {
   return (
     <div
       style={{
-        position: 'relative',
+        position: "relative",
       }}
     >
       <Handle
@@ -21,7 +15,7 @@ export default function EmailNode({
         style={{
           width: 12,
           height: 12,
-          background: '#2563eb',
+          background: "#2563eb",
         }}
       />
 
@@ -29,12 +23,10 @@ export default function EmailNode({
         title="📧 Email"
         background="#dbeafe"
         selected={selected}
-		invalid={data.invalid}
-		simulationStatus={
-    		data.simulationStatus
-		}
+        invalid={data.invalid}
+        simulationStatus={data.simulationStatus}
       >
-        {data.subject || 'Envoi email'}
+        {data.subject || "Envoi email"}
       </BaseNode>
 
       <Handle
@@ -43,9 +35,9 @@ export default function EmailNode({
         style={{
           width: 12,
           height: 12,
-          background: '#2563eb',
+          background: "#2563eb",
         }}
       />
     </div>
-  )
+  );
 }

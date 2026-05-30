@@ -1,59 +1,41 @@
-import { useMemo } from 'react'
+import { useMemo } from "react";
 
-import { useWorkflowStore } from '../store/flowStore'
+import { useWorkflowStore } from "../store/flowStore";
 
-import { validateWorkflow } from '../utils/flowValidation'
+import { validateWorkflow } from "../utils/flowValidation";
 
 export default function WorkflowErrors() {
-  const nodes =
-    useWorkflowStore(
-      (state) => state.nodes
-    )
+  const nodes = useWorkflowStore((state) => state.nodes);
 
-	const selectedNodeId =
-	  useWorkflowStore(
-		(state) =>
-		  state.selectedNodeId
-	  )
+  const selectedNodeId = useWorkflowStore((state) => state.selectedNodeId);
 
-  const edges =
-    useWorkflowStore(
-      (state) => state.edges
-    )
+  const edges = useWorkflowStore((state) => state.edges);
 
   const errors = useMemo(() => {
-    return validateWorkflow(
-      nodes,
-      edges
-    )
-  }, [nodes, edges])
+    return validateWorkflow(nodes, edges);
+  }, [nodes, edges]);
 
-	const filteredErrors =
-	  selectedNodeId === null
-		? []
-		: errors.filter(
-			(error) =>
-			  error.nodeId ===
-				selectedNodeId
-		  )
+  const filteredErrors =
+    selectedNodeId === null
+      ? []
+      : errors.filter((error) => error.nodeId === selectedNodeId);
 
   if (filteredErrors.length === 0) {
-    return null
+    return null;
   }
 
   return (
     <div
       style={{
-        position: 'absolute',
+        position: "absolute",
         bottom: 20,
         left: 20,
 
         zIndex: 20,
 
-        background: '#fee2e2',
+        background: "#fee2e2",
 
-        border:
-          '1px solid #dc2626',
+        border: "1px solid #dc2626",
 
         borderRadius: 12,
 
@@ -62,19 +44,13 @@ export default function WorkflowErrors() {
         width: 350,
       }}
     >
-      <strong>
-        Erreurs workflow
-      </strong>
+      <strong>Erreurs workflow</strong>
 
       <ul>
-        {filteredErrors.map(
-          (error, index) => (
-            <li key={index}>
-              {error.message}
-            </li>
-          )
-        )}
+        {filteredErrors.map((error, index) => (
+          <li key={index}>{error.message}</li>
+        ))}
       </ul>
     </div>
-  )
+  );
 }

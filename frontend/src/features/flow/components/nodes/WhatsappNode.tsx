@@ -1,18 +1,12 @@
-import {
-  Handle,
-  Position,
-} from '@xyflow/react'
+import { Handle, Position } from "@xyflow/react";
 
-import BaseNode from './BaseNode'
+import BaseNode from "./BaseNode";
 
-export default function WhatsappNode({
-	data,
-  selected,
-}: any) {
+export default function WhatsappNode({ data, selected }: any) {
   return (
     <div
       style={{
-        position: 'relative',
+        position: "relative",
       }}
     >
       <Handle
@@ -21,7 +15,7 @@ export default function WhatsappNode({
         style={{
           width: 12,
           height: 12,
-          background: '#16a34a',
+          background: "#16a34a",
         }}
       />
 
@@ -29,10 +23,8 @@ export default function WhatsappNode({
         title="🟢 WhatsApp"
         background="#dcfce7"
         selected={selected}
-		invalid={data.invalid}
-		simulationStatus={
-    		data.simulationStatus
-		}
+        invalid={data.invalid}
+        simulationStatus={data.simulationStatus}
       >
         Envoi WhatsApp
       </BaseNode>
@@ -43,9 +35,9 @@ export default function WhatsappNode({
         style={{
           width: 12,
           height: 12,
-          background: '#16a34a',
+          background: "#16a34a",
         }}
       />
     </div>
-  )
+  );
 }
