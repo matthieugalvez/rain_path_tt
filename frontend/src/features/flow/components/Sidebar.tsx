@@ -9,25 +9,11 @@ export default function WorkflowSidebar() {
 
   const selectedNodeId = useWorkflowStore((state) => state.selectedNodeId);
 
-  const setSelectedNodeId = useWorkflowStore(
-    (state) => state.setSelectedNodeId,
-  );
-
-  const deleteSelectedElements = useWorkflowStore(
-    (state) => state.deleteSelectedElements,
-  );
-
   const selectedNode = nodes.find((node) => node.id === selectedNodeId);
 
   if (!selectedNode) {
     return null;
   }
-
-  const selectedNodes = nodes.filter((node) => node.selected);
-
-  const deletableNodes = selectedNodes.filter(
-    (node) => node.type !== "start" && node.type !== "end",
-  );
 
   return (
     <div

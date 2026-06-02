@@ -11,67 +11,11 @@ export function validateWorkflow(
 ): ValidationError[] {
   const errors: ValidationError[] = [];
 
-  validateStartNode(nodes, errors);
-
-  validateEndNode(nodes, errors);
-
-  validateConditionNodes(nodes, edges, errors);
-
   validateNodeConnections(nodes, edges, errors);
 
-  validateAllPathsEnd(nodes, edges, errors);
+  validateStartToEndPaths(nodes, edges, errors);
 
   return errors;
-}
-
-function validateStartNode(nodes: Node[], errors: ValidationError[]) {
-  const starts = nodes.filter((node) => node.type === "start");
-
-  if (starts.length === 0) {
-    errors.push({
-      message: "Le workflow doit avoir un node Start",
-    });
-  }
-
-  if (starts.length > 1) {
-    errors.push({
-      message: "Un seul node Start est autorisé",
-    });
-  }
-}
-
-function validateEndNode(nodes: Node[], errors: ValidationError[]) {
-  const ends = nodes.filter((node) => node.type === "end");
-
-  if (ends.length === 0) {
-    errors.push({
-      message: "Le workflow doit avoir un node End",
-    });
-  }
-}
-
-function validateConditionNodes(
-  nodes: Node[],
-  edges: Edge[],
-  errors: ValidationError[],
-) {
-  const conditions = nodes.filter((node) => node.type === "condition");
-
-  for (const node of conditions) {
-    const outgoingEdges = edges.filter((edge) => edge.source === node.id);
-
-    const hasYes = outgoingEdges.some((edge) => edge.sourceHandle === "yes");
-
-    const hasNo = outgoingEdges.some((edge) => edge.sourceHandle === "no");
-
-    if (!hasYes || !hasNo) {
-      errors.push({
-        nodeId: node.id,
-
-        message: "La condition doit avoir une sortie YES et NO",
-      });
-    }
-  }
 }
 
 function validateNodeConnections(
@@ -90,7 +34,7 @@ function validateNodeConnections(
           errors.push({
             nodeId: node.id,
 
-            message: "Le node Start doit avoir une sortie",
+            message: "start sans sortie",
           });
         }
 
@@ -106,7 +50,7 @@ function validateNodeConnections(
           errors.push({
             nodeId: node.id,
 
-            message: `${node.type} doit avoir une entrée`,
+            message: `${node.type} sans entrée`,
           });
         }
 
@@ -114,7 +58,7 @@ function validateNodeConnections(
           errors.push({
             nodeId: node.id,
 
-            message: `${node.type} doit avoir une sortie`,
+            message: `${node.type} sans sortie`,
           });
         }
 
@@ -126,7 +70,7 @@ function validateNodeConnections(
           errors.push({
             nodeId: node.id,
 
-            message: "Condition sans entrée",
+            message: "condition sans entrée",
           });
         }
 
@@ -138,7 +82,7 @@ function validateNodeConnections(
           errors.push({
             nodeId: node.id,
 
-            message: "Condition sans branche YES",
+            message: "condition sans branche YES",
           });
         }
 
@@ -146,7 +90,7 @@ function validateNodeConnections(
           errors.push({
             nodeId: node.id,
 
-            message: "Condition sans branche NO",
+            message: "condition sans branche NO",
           });
         }
 
@@ -158,7 +102,7 @@ function validateNodeConnections(
           errors.push({
             nodeId: node.id,
 
-            message: "Node End sans entrée",
+            message: "end sans entrée",
           });
         }
 
@@ -168,54 +112,74 @@ function validateNodeConnections(
   }
 }
 
-function validateAllPathsEnd(
+function validateStartToEndPaths(
   nodes: Node[],
   edges: Edge[],
   errors: ValidationError[],
 ) {
   const start = nodes.find((node) => node.type === "start");
 
-  if (!start) {
+  const end = nodes.find((node) => node.type === "end");
+
+  if (!start || !end) {
     return;
   }
 
-  const visited = new Set<string>();
+  const reachableFromStart = new Set<string>();
 
-  function dfs(nodeId: string) {
-    if (visited.has(nodeId)) {
+  function dfsFromStart(nodeId: string) {
+    if (reachableFromStart.has(nodeId)) {
       return;
     }
 
-    visited.add(nodeId);
-
-    const node = nodes.find((n) => n.id === nodeId);
-
-    if (!node) {
-      return;
-    }
-
-    if (node.type === "end") {
-      return;
-    }
+    reachableFromStart.add(nodeId);
 
     const outgoing = edges.filter((edge) => edge.source === nodeId);
 
-    if (outgoing.length === 0) {
-      errors.push({
-        nodeId,
-
-        message: "Une branche ne termine pas sur un node End",
-      });
-
-      return;
-    }
-
     for (const edge of outgoing) {
-      dfs(edge.target);
+      dfsFromStart(edge.target);
     }
   }
 
-  dfs(start.id);
+  dfsFromStart(start.id);
+
+  const canReachEnd = new Set<string>();
+
+  function dfsToEnd(nodeId: string) {
+    if (canReachEnd.has(nodeId)) {
+      return;
+    }
+
+    canReachEnd.add(nodeId);
+
+    const incoming = edges.filter((edge) => edge.target === nodeId);
+
+    for (const edge of incoming) {
+      dfsToEnd(edge.source);
+    }
+  }
+
+  dfsToEnd(end.id);
+
+  for (const node of nodes) {
+    if (!reachableFromStart.has(node.id)) {
+      errors.push({
+        nodeId: node.id,
+
+        message: `${node.type} inaccessible depuis le start`,
+      });
+
+      continue;
+    }
+
+    if (!canReachEnd.has(node.id)) {
+      errors.push({
+        nodeId: node.id,
+
+        message: `${node.type} ne mène pas au end`,
+      });
+    }
+  }
 }
 
 export function getInvalidNodeIds(errors: ValidationError[]): Set<string> {

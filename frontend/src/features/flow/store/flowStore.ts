@@ -43,6 +43,14 @@ interface WorkflowState {
 
   setWorkflow: (nodes: any[], edges: any[]) => void;
 
+  setSimulationState: (
+    currentNodeId: string | null,
+
+    completedNodeIds: string[],
+
+    activeEdgeIds: string[],
+  ) => void;
+
   currentSimulationNodeId: string | null;
 
   completedSimulationNodeIds: string[];
@@ -274,11 +282,11 @@ export const useWorkflowStore = create<WorkflowState>((set) => ({
     }),
 
   setSimulationState: (
-    currentNodeId,
+    currentNodeId: string | null,
 
-    completedNodeIds,
+    completedNodeIds: string[],
 
-    activeEdgeIds,
+    activeEdgeIds: string[],
   ) =>
     set({
       currentSimulationNodeId: currentNodeId,

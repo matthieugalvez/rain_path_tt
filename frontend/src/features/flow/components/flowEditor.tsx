@@ -1,4 +1,4 @@
-import { React, useEffect } from "react";
+import { useEffect } from "react";
 
 import {
   ReactFlow,
@@ -6,6 +6,7 @@ import {
   Controls,
   useReactFlow,
   MiniMap,
+  type Edge,
 } from "@xyflow/react";
 
 import "@xyflow/react/dist/style.css";
@@ -25,8 +26,6 @@ export default function WorkflowEditor() {
   const nodes = useWorkflowStore((state) => state.nodes);
 
   const edges = useWorkflowStore((state) => state.edges);
-
-  const selectedNodes = nodes.filter((node) => node.selected);
 
   const onNodesChange = useWorkflowStore((state) => state.onNodesChange);
 
@@ -240,7 +239,7 @@ export default function WorkflowEditor() {
                 return;
               }
 
-              let currentEdge;
+              let currentEdge: Edge;
 
               if (currentNode.type === "condition") {
                 currentEdge = edges.find(
